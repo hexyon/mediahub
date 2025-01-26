@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="favicon.ico" rel="icon" type="image/x-icon"/>
+<title>Media Hub</title>
+<style>
+    @font-face {
+        font-family: 'Roboto';
+        src: url('Roboto/Roboto-Regular.ttf') format('truetype');
+    }
+    @font-face {
+        font-family: 'Roboto-Bold';
+        src: url('Roboto/Roboto-Bold.ttf') format('truetype');
+    }
+    body {
+        font-family: 'Roboto', Arial, sans-serif;
+        margin: 0;
+        background: #f9f9f9;
+        overflow: hidden;
+        position: relative;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+    }
+    .image-container {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: white;
+    }
+    .background-blur {
+        display: none;
+    }
+    .thumbnail {
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: transform 0.3s ease-in-out;
+        position: relative;
+        z-index: 1;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    }
+    .thumbnail:hover {
+        transform: scale(1.05);
+    }
+    .upload-button {
+        width: 50px;
+        height: 50px;
+        background: #007bff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2em;
+        color: #fff;
+        cursor: pointer;
+        margin-left: 20px;
+        position: relative;
+        z-index: 1;
+    }
+    .full-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.95);
+    }
+    .full-screen .background-blur {
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 120%;
+        height: 120%;
+        background-size: cover;
+        background-position: center;
+        filter: blur(25px) brightness(0.85);
+        opacity: 0.9;
+        transform: translate(-50%, -50%) scale(1.2);
+        transition: background-image 0.3s ease-out;
+    }
+    .full-screen img, .full-screen video {
+        max-width: 90%;
+        max-height: 90%;
+        border-radius: 50px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 1;
+    }
+    .full-screen video {
+        border-radius: 20px;
+    }
+    .full-screen video::-webkit-media-controls-panel {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.5);
+    }
+    .full-screen .index {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 1.5em;
+        color: #000;
+        background-color: #f5f5f7;
+        padding: 5px 10px;
+        border-radius: 10px;
+        cursor: pointer;
+        z-index: 2;
+    }
+    .arrow {
+        position: absolute;
+        width: 44px;
+        height: 44px;
+        background: rgba(255, 255, 255, 0.9);
+        cursor: pointer;
+        display: none;
+        z-index: 2;
+        border-radius: 50%;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s ease-in-out;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+    .arrow::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 10px;
+        height: 10px;
+        border: solid #000;
+        border-width: 2px 2px 0 0;
+        opacity: 0.8;
+    }
+    .left-arrow {
+        left: 24px;
+    }
+    .left-arrow::before {
+        transform: translate(-35%, -50%) rotate(-135deg);
+    }
+    .right-arrow {
+        right: 24px;
+    }
+    .right-arrow::before {
+        transform: translate(-65%, -50%) rotate(45deg);
+    }
+    .arrow:hover {
+        background: rgba(255, 255, 255, 0.95);
+        transform: scale(1.05);
+    }
+    .arrow:active {
+        background: rgba(255, 255, 255, 1);
+        transform: scale(0.95);
+    }
+    .exit-button {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        width: 50px;
+        height: 50px;
+        background: url('exit.png') no-repeat;
+        background-size: contain;
+        border: none;
+        outline: none;
+        display: none;
+        z-index: 2;
+    }
+    .arrow.hidden {
+        opacity: 0;
+    }
+    #file-input {
+        display: none;
+    }
+    .image-list {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        max-height: 80vh;
+        overflow-y: auto;
+        z-index: 3;
+    }
+    .image-list ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    .image-list li {
+        cursor: pointer;
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+    }
+    .image-list li:hover {
+        background-color: #f0f0f0;
+    }
+    .image-list::-webkit-scrollbar {
+        width: 10px;
+    }
+    .image-list::-webkit-scrollbar-track {
+        background: #f1f1f1; 
+    }
+    .image-list::-webkit-scrollbar-thumb {
+        background-color: #007aff; 
+        border-radius: 10px;
+        border: 3px solid #f1f1f1;
+    }
+    .image-list::-webkit-scrollbar-thumb:hover {
+        background-color: #0056b3; 
+    }
+</style>
+</head>
+<body>
+<div class="image-container">
+    <div class="background-blur"></div>
+    <img class="thumbnail" src="thumbnail.png"/>
+    <div class="upload-button" onclick="document.getElementById('file-input').click()">+</div>
+</div>
+<input type="file" id="file-input" multiple accept="image/*,video/*">
+<div class="full-screen">
+    <div class="background-blur"></div>
+    <img src=""/>
+    <video controls style="display: none;"></video>
+    <div class="index"></div>
+    <div class="exit-button"></div>
+    <div class="arrow left-arrow"></div>
+    <div class="arrow right-arrow"></div>
+</div>
+<div class="image-list" style="display: none;">
+    <ul></ul>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.full-screen').hide();
+    $('.full-screen .index').hide();
+    var media = [];
+    var fileNames = [];
+    var fileTypes = [];
+    var currentIndex = 0;
+
+    function updateMedia() {
+        var currentMedia = media[currentIndex];
+        var currentType = fileTypes[currentIndex];
+        
+        if (currentType.startsWith('image')) {
+            $('.full-screen img').show().attr('src', currentMedia);
+            $('.full-screen video').hide()[0].pause();
+            $('.full-screen .background-blur').css('background-image', 'url(' + currentMedia + ')');
+        } else if (currentType.startsWith('video')) {
+            $('.full-screen img').hide();
+            $('.full-screen video').show().attr('src', currentMedia)[0].play();
+            $('.full-screen .background-blur').css('background-image', 'none');
+        }
+        
+        $('.full-screen .index').text((currentIndex + 1));
+    }
+
+    function updateThumbnail(mediaUrl, type) {
+        if (type.startsWith('image')) {
+            $('.thumbnail').attr('src', mediaUrl);
+        } else if (type.startsWith('video')) {
+            var video = document.createElement('video');
+            video.src = mediaUrl;
+            video.addEventListener('loadeddata', function() {
+                video.currentTime = 1;
+            });
+            video.addEventListener('seeked', function() {
+                var canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                $('.thumbnail').attr('src', canvas.toDataURL());
+            });
+        }
+    }
+
+    $('.thumbnail').click(function() {
+        if (media.length > 0) {
+            updateMedia();
+            $('.full-screen').show();
+            $('.arrow, .exit-button, .full-screen .index').show();
+            $('.image-container').hide();
+        }
+    });
+
+    $(document).keydown(function(e) {
+        if ($('.full-screen').is(':visible')) {
+            if (e.key === 'ArrowRight') {
+                currentIndex = (currentIndex + 1) % media.length;
+                $('.arrow.left-arrow').addClass('hidden');
+                $('.arrow.right-arrow').removeClass('hidden');
+            } else if (e.key === 'ArrowLeft') {
+                currentIndex = (currentIndex - 1 + media.length) % media.length;
+                $('.arrow.right-arrow').addClass('hidden');
+                $('.arrow.left-arrow').removeClass('hidden');
+            } else if (e.key === 'Escape') {
+                $('.full-screen').hide();
+                $('.full-screen .index').hide();
+                $('.image-container').show();
+                $('.full-screen video')[0].pause();
+                updateThumbnail(media[currentIndex], fileTypes[currentIndex]);
+                $('.arrow').removeClass('hidden');
+                return;
+            }
+            updateMedia();
+        }
+    });
+
+    $('.arrow.left-arrow').click(function(e) {
+        e.stopPropagation();
+        currentIndex = (currentIndex - 1 + media.length) % media.length;
+        $('.arrow.right-arrow').addClass('hidden');
+        $('.arrow.left-arrow').removeClass('hidden');
+        updateMedia();
+    });
+
+    $('.arrow.right-arrow').click(function(e) {
+        e.stopPropagation();
+        currentIndex = (currentIndex + 1) % media.length;
+        $('.arrow.left-arrow').addClass('hidden');
+        $('.arrow.right-arrow').removeClass('hidden');
+        updateMedia();
+    });
+
+    $('.exit-button').click(function() {
+        $('.full-screen').hide();
+        $('.full-screen .index').hide();
+        $('.image-container').show();
+        $('.full-screen video')[0].pause();
+        updateThumbnail(media[currentIndex], fileTypes[currentIndex]);
+        $('.arrow').removeClass('hidden');
+    });
+
+    $('.full-screen .index').click(function() {
+        var listHtml = '';
+        for (var i = 0; i < media.length; i++) {
+            var icon = fileTypes[i].startsWith('video') ? '🎥' : '🖼️';
+            listHtml += '<li data-index="' + i + '">' + icon + ' ' + (i + 1) + '. ' + fileNames[i] + '</li>';
+        }
+        $('.image-list ul').html(listHtml);
+        $('.image-list').show();
+    });
+
+    $('.image-list').on('click', 'li', function() {
+        currentIndex = $(this).data('index');
+        updateMedia();
+        $('.image-list').hide();
+    });
+
+    $(document).mouseup(function(e) {
+        var container = $(".image-list");
+        if (!container.is(e.target) && container.has(e.target).length === 0) {
+            container.hide();
+        }
+    });
+
+    $('#file-input').on('change', function(event) {
+        var files = event.target.files;
+        for (var i = 0; i < files.length; i++) {
+            var reader = new FileReader();
+            reader.onload = (function(file) {
+                return function(e) {
+                    media.push(e.target.result);
+                    fileNames.push(file.name);
+                    fileTypes.push(file.type);
+                    if (media.length === 1) {
+                        updateThumbnail(e.target.result, file.type);
+                    }
+                };
+            })(files[i]);
+            reader.readAsDataURL(files[i]);
+        }
+    });
+});
+</script>
+</body>
+</html>
