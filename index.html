@@ -337,6 +337,14 @@ $(document).ready(function() {
         updateMedia();
     });
 
+    $('.arrow.left-arrow').hover(function() {
+        $(this).removeClass('hidden');
+    });
+
+    $('.arrow.right-arrow').hover(function() {
+        $(this).removeClass('hidden');
+    });
+
     $('.exit-button').click(function() {
         $('.full-screen').hide();
         $('.full-screen .index').hide();
