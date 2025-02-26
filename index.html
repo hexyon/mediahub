@@ -254,6 +254,7 @@
 <input type="file" id="file-input" multiple accept="image/*,video/*">
 <div class="full-screen">
     <div class="background-blur"></div>
+    <div class="background-blur"></div>
     <img src=""/>
     <video controls style="display: none;"></video>
     <div class="index"></div>
@@ -275,6 +276,7 @@ $(document).ready(function() {
     var currentIndex = 0;
     var blurEnabled = false;
     var preloadedImages = {};  // Cache for preloaded images
+    var currentBlurIndex = 0;
 
     function preloadAdjacentImages(index) {
         if (!blurEnabled) return;
@@ -306,50 +308,39 @@ $(document).ready(function() {
         }
     });
 
-    function updateMedia() {
-        var currentMedia = media[currentIndex];
-        var currentType = fileTypes[currentIndex];
+function updateMedia() {
+    var currentMedia = media[currentIndex];
+    var currentType = fileTypes[currentIndex];
+    
+    if (currentType.startsWith('image')) {
+        $('.full-screen img').show().attr('src', currentMedia);
+        $('.full-screen video').hide()[0].pause();
         
-        if (currentType.startsWith('image')) {
-            $('.full-screen img').show().attr('src', currentMedia);
-            $('.full-screen video').hide()[0].pause();
-            
-            if (blurEnabled) {
-                const $blur = $('.full-screen .background-blur');
-                $blur.removeClass('visible');
-                
-                // Set new background image immediately but hidden
-                $blur.css({
-                    'background-image': `url(${currentMedia})`,
-                    'display': 'block'
-                });
-                
-                // Force reflow
-                $blur[0].offsetHeight;
-                
-                // Show with transition
-                requestAnimationFrame(() => {
-                    $blur.addClass('visible');
-                });
-                
-                // Preload next images
-                preloadAdjacentImages(currentIndex);
-            }
-        } else if (currentType.startsWith('video')) {
-            $('.full-screen img').hide();
-            $('.full-screen video').show().attr('src', currentMedia)[0].play();
-            if (blurEnabled) {
-                $('.full-screen .background-blur')
-                    .removeClass('visible')
-                    .css({
-                        'display': 'block',
-                        'background-image': 'none'
-                    });
-            }
+        if (blurEnabled) {
+            const $blurs = $('.full-screen .background-blur');
+            const nextBlurIndex = 1 - currentBlurIndex;
+            $blurs.eq(nextBlurIndex).css({
+                'background-image': `url(${currentMedia})`,
+                'display': 'block',
+                'opacity': 0.9
+            });
+            $blurs.eq(currentBlurIndex).css('opacity', 0);
+            currentBlurIndex = nextBlurIndex;
+            preloadAdjacentImages(currentIndex);
         }
-        
-        $('.full-screen .index').text((currentIndex + 1));
+    } else if (currentType.startsWith('video')) {
+        $('.full-screen img').hide();
+        $('.full-screen video').show().attr('src', currentMedia)[0].play();
+        if (blurEnabled) {
+            $('.full-screen .background-blur').css({
+                'display': 'block',
+                'opacity': 0
+            });
+        }
     }
+    
+    $('.full-screen .index').text((currentIndex + 1));
+}
 
     function updateThumbnail(mediaUrl, type) {
         if (type.startsWith('image')) {
