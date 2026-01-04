@@ -1,0 +1,10 @@
+{
+  "name": "mediahub",
+  "version": "1.0.0",
+  "description": "MediaHub - Image and Video Gallery",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}
