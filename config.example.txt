@@ -1,0 +1,6 @@
+# MediaHub Configuration Template
+# Copy this file to config.txt and fill in your actual credentials
+# IMPORTANT: Never commit config.txt to GitHub
+
+SUPABASE_URL=your_supabase_url_here
+SUPABASE_KEY=your_supabase_anon_key_here
