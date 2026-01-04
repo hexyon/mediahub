@@ -1,6 +1,6 @@
 # Environment and Configuration Files
 config.txt
-config.js
+# config.js
 .env
 .env.local
 .env.*.local
