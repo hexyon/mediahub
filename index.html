@@ -553,7 +553,6 @@
       var descriptions = [];  // Store descriptions for each media item
       var showDescription = false;
       var isAnalyzing = false;
-      var currentAnalysisController = null; // Track current fetch request
 
       // Initialize Supabase client from config
       const supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
@@ -624,19 +623,14 @@
         if (currentType.startsWith('image')) {
           $('.ai-button').show();
 
-          // Update description panel state
-          if (showDescription) {
-            if (descriptions[currentIndex]) {
-              // Show existing description immediately
-              $('.description-panel-content p').text(descriptions[currentIndex]);
-              $('.description-panel-loading').hide();
-              $('.description-panel-content').show();
-            } else if (!isAnalyzing) {
-              // Reset panel to loading state and start analysis
-              $('.description-panel-content').hide();
-              $('.description-panel-loading').show();
-              analyzeCurrentImage();
-            }
+          // Auto-analyze if description panel is visible
+          if (showDescription && !descriptions[currentIndex]) {
+            analyzeCurrentImage();
+          } else if (showDescription && descriptions[currentIndex]) {
+            // Show existing description
+            $('.description-panel-content p').text(descriptions[currentIndex]);
+            $('.description-panel-loading').hide();
+            $('.description-panel-content').show();
           }
         } else {
           $('.ai-button').hide();
@@ -765,7 +759,7 @@
       var currentAnalysisIndex = -1; // Track which image is being analyzed
 
       async function analyzeCurrentImage() {
-        if (!media[currentIndex] || !fileTypes[currentIndex].startsWith('image')) {
+        if (isAnalyzing || !media[currentIndex] || !fileTypes[currentIndex].startsWith('image')) {
           return;
         }
 
@@ -774,15 +768,9 @@
           return;
         }
 
-        // Cancel any ongoing analysis
-        if (currentAnalysisController) {
-          currentAnalysisController.abort();
-        }
-
         isAnalyzing = true;
         const requestIndex = currentIndex; // Capture the index for this request
         currentAnalysisIndex = requestIndex;
-        currentAnalysisController = new AbortController();
 
         $('.description-panel-loading').show();
         $('.description-panel-content').hide();
@@ -818,18 +806,12 @@
             }
           }
         } catch (err) {
-          // Don't show error if request was aborted (user switched images)
-          if (err.name === 'AbortError') {
-            console.log('Analysis cancelled - user switched images');
-            return;
-          }
           console.error('Error calling analyze-image:', err);
           if (requestIndex === currentIndex) {
             $('.description-panel-content p').text('Failed to connect to AI service');
           }
         } finally {
           isAnalyzing = false;
-          currentAnalysisController = null;
           if (requestIndex === currentIndex) {
             $('.description-panel-loading').hide();
             $('.description-panel-content').show();
