@@ -5,6 +5,13 @@
 [build.environment]
   NODE_VERSION = "18"
 
+# Block access to config.js (security measure)
+[[redirects]]
+  from = "/config.js"
+  to = "/404"
+  status = 404
+  force = true
+
 # Optional: Set custom headers for security
 [[headers]]
   for = "/*"

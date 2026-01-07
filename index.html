@@ -528,7 +528,13 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="config.js"></script>
+  <script>
+    // MediaHub Configuration - Injected at build time
+    const CONFIG = {
+        SUPABASE_URL: 'https://test-url.supabase.co',
+        SUPABASE_KEY: 'test-key-12345'
+    };
+  </script>
   <script>
     $(document).ready(function () {
       $('.full-screen').hide();

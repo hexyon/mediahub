@@ -1,4 +1,4 @@
-// build.js - Generates config.js from environment variables
+// build.js - Injects configuration directly into index.html from environment variables
 const fs = require('fs');
 const path = require('path');
 
@@ -10,14 +10,26 @@ if (!supabaseUrl || !supabaseKey) {
   process.exit(1);
 }
 
-const configContent = `// MediaHub Configuration
-// This file is auto-generated during build from environment variables
+// Read the template index.html
+const indexPath = path.join(__dirname, 'index.html');
+let indexContent = fs.readFileSync(indexPath, 'utf8');
 
-const CONFIG = {
-    SUPABASE_URL: '${supabaseUrl}',
-    SUPABASE_KEY: '${supabaseKey}'
-};
-`;
+// Create inline config script
+const inlineConfig = `<script>
+    // MediaHub Configuration - Injected at build time
+    const CONFIG = {
+        SUPABASE_URL: '${supabaseUrl}',
+        SUPABASE_KEY: '${supabaseKey}'
+    };
+  </script>`;
 
-fs.writeFileSync(path.join(__dirname, 'config.js'), configContent);
-console.log('✅ config.js generated successfully from environment variables');
+// Replace the config.js script tag with inline config
+indexContent = indexContent.replace(
+  '<script src="config.js"></script>',
+  inlineConfig
+);
+
+// Write the modified index.html back
+fs.writeFileSync(indexPath, indexContent);
+console.log('✅ Configuration injected into index.html successfully');
+console.log('⚠️  Note: config.js is no longer generated or needed');
