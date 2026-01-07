@@ -720,6 +720,12 @@
          UPDATED: List generation for “Image/Video”
          ------------------------------------------------------ */
       $('.full-screen .index').click(function () {
+        // Toggle the list visibility
+        if ($('.image-list').is(':visible')) {
+          $('.image-list').hide();
+          return;
+        }
+
         var listHtml = '';
         for (var i = 0; i < media.length; i++) {
           // Use plain text “Image” or “Video” labels in title case
@@ -740,13 +746,6 @@
         currentIndex = $(this).data('index');
         updateMedia();
         $('.image-list').hide();
-      });
-
-      $(document).mouseup(function (e) {
-        var container = $(".image-list");
-        if (!container.is(e.target) && container.has(e.target).length === 0) {
-          container.hide();
-        }
       });
 
       // AI Description Functions
