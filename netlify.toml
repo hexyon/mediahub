@@ -2,6 +2,13 @@
   command = "npm run build"
   publish = "."
 
+  # Block access to config.js (security measure)
+[[redirects]]
+  from = "/config.js"
+  to = "/404"
+  status = 404
+  force = true
+
 [build.environment]
   NODE_VERSION = "18"
 
