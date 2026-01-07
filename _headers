@@ -1,9 +1,0 @@
-# Block direct access to config.js
-/config.js
-  X-Robots-Tag: noindex
-  Cache-Control: no-store
-
-# Prevent config files from being cached or indexed
-/config.*
-  X-Robots-Tag: noindex
-  Cache-Control: no-store
