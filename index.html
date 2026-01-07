@@ -553,6 +553,7 @@
       var descriptions = [];  // Store descriptions for each media item
       var showDescription = false;
       var isAnalyzing = false;
+      var analysisRequestId = 0;  // Monotonic request ID for cancellation
 
       // Initialize Supabase client from config
       const supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
@@ -590,6 +591,11 @@
         var currentMedia = media[currentIndex];
         var currentType = fileTypes[currentIndex];
 
+        // Cancel any in-flight analysis when changing images
+        analysisRequestId++;
+        isAnalyzing = false;
+        $('.description-panel-loading').hide();
+
         if (currentType.startsWith('image')) {
           $('.full-screen img').show().attr('src', currentMedia);
           $('.full-screen video').hide()[0].pause();
@@ -624,13 +630,15 @@
           $('.ai-button').show();
 
           // Auto-analyze if description panel is visible
-          if (showDescription && !descriptions[currentIndex]) {
-            analyzeCurrentImage();
-          } else if (showDescription && descriptions[currentIndex]) {
-            // Show existing description
-            $('.description-panel-content p').text(descriptions[currentIndex]);
-            $('.description-panel-loading').hide();
-            $('.description-panel-content').show();
+          if (showDescription) {
+            if (!descriptions[currentIndex]) {
+              analyzeCurrentImage();
+            } else {
+              // Show existing description
+              $('.description-panel-content p').text(descriptions[currentIndex]);
+              $('.description-panel-loading').hide();
+              $('.description-panel-content').show();
+            }
           }
         } else {
           $('.ai-button').hide();
@@ -756,10 +764,8 @@
       });
 
       // AI Description Functions
-      var currentAnalysisIndex = -1; // Track which image is being analyzed
-
       async function analyzeCurrentImage() {
-        if (isAnalyzing || !media[currentIndex] || !fileTypes[currentIndex].startsWith('image')) {
+        if (!media[currentIndex] || !fileTypes[currentIndex].startsWith('image')) {
           return;
         }
 
@@ -768,10 +774,10 @@
           return;
         }
 
-        isAnalyzing = true;
-        const requestIndex = currentIndex; // Capture the index for this request
-        currentAnalysisIndex = requestIndex;
+        const requestId = ++analysisRequestId;
+        const requestIndex = currentIndex;
 
+        isAnalyzing = true;
         $('.description-panel-loading').show();
         $('.description-panel-content').hide();
 
@@ -780,39 +786,28 @@
             body: { imageData: media[requestIndex] }
           });
 
-          // Only update if we're still on the same image
-          if (requestIndex !== currentIndex) {
-            console.log('Discarding outdated analysis result');
-            return;
-          }
+          // Ignore outdated requests
+          if (requestId !== analysisRequestId) return;
 
           if (error) {
             console.error('Error analyzing image:', error);
             $('.description-panel-content p').text('Failed to analyze image');
-            $('.description-panel-loading').hide();
-            $('.description-panel-content').show();
-            return;
+          } else if (data?.description) {
+            descriptions[requestIndex] = data.description;
+            $('.description-panel-content p').text(data.description);
+          } else {
+            $('.description-panel-content p').text('No description available');
           }
 
-          if (data?.description) {
-            descriptions[requestIndex] = data.description;
-            // Double-check we're still on the same image before displaying
-            if (requestIndex === currentIndex) {
-              $('.description-panel-content p').text(data.description);
-            }
-          } else {
-            if (requestIndex === currentIndex) {
-              $('.description-panel-content p').text('No description available');
-            }
-          }
         } catch (err) {
           console.error('Error calling analyze-image:', err);
-          if (requestIndex === currentIndex) {
-            $('.description-panel-content p').text('Failed to connect to AI service');
-          }
+          if (requestId !== analysisRequestId) return;
+          $('.description-panel-content p').text('Failed to connect to AI service');
+
         } finally {
-          isAnalyzing = false;
-          if (requestIndex === currentIndex) {
+          // Always reset state for the latest request only
+          if (requestId === analysisRequestId) {
+            isAnalyzing = false;
             $('.description-panel-loading').hide();
             $('.description-panel-content').show();
           }
