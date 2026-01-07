@@ -1,4 +1,4 @@
-// build.js - Generates config.js from environment variables
+// build.js - Injects credentials directly into index.html
 const fs = require('fs');
 const path = require('path');
 
@@ -10,14 +10,16 @@ if (!supabaseUrl || !supabaseKey) {
   process.exit(1);
 }
 
-const configContent = `// MediaHub Configuration
-// This file is auto-generated during build from environment variables
+// Read the index.html file
+const indexPath = path.join(__dirname, 'index.html');
+let htmlContent = fs.readFileSync(indexPath, 'utf8');
 
-const CONFIG = {
-    SUPABASE_URL: '${supabaseUrl}',
-    SUPABASE_KEY: '${supabaseKey}'
-};
-`;
+// Replace placeholders with actual values
+htmlContent = htmlContent.replace('__SUPABASE_URL__', supabaseUrl);
+htmlContent = htmlContent.replace('__SUPABASE_KEY__', supabaseKey);
 
-fs.writeFileSync(path.join(__dirname, 'config.js'), configContent);
-console.log('✅ config.js generated successfully from environment variables');
+// Write the modified HTML back
+fs.writeFileSync(indexPath, htmlContent);
+
+console.log('✅ Credentials injected into index.html successfully');
+console.log('⚠️  Note: index.html now contains real credentials - do not commit this file!');
