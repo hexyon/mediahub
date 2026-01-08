@@ -1,1 +1,1 @@
-Copyright (c) 2024 Hexy. All rights reserved.
+Copyright (c) 2024 by Hexy. All rights reserved.
