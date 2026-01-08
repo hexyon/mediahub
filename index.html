@@ -553,6 +553,7 @@
       var descriptions = [];  // Store descriptions for each media item
       var showDescription = false;
       var isAnalyzing = false;
+      var analysisTimeout = null;  // Debounce timer for analysis
 
       // Initialize Supabase client from config
       const supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
@@ -623,19 +624,41 @@
         if (currentType.startsWith('image')) {
           $('.ai-button').show();
 
+          // Cancel any pending analysis when changing images
+          if (analysisTimeout) {
+            clearTimeout(analysisTimeout);
+            analysisTimeout = null;
+          }
+
           // Auto-analyze if description panel is visible
           if (showDescription && !descriptions[currentIndex]) {
-            analyzeCurrentImage();
+            // Wait 3 seconds before analyzing (debounce for quick browsing)
+            $('.description-panel-loading').show();
+            $('.description-panel-content').hide();
+            
+            analysisTimeout = setTimeout(() => {
+              analyzeCurrentImage();
+            }, 3000);
           } else if (showDescription && descriptions[currentIndex]) {
-            // Show existing description
+            // Show existing description immediately
             $('.description-panel-content p').text(descriptions[currentIndex]);
             $('.description-panel-loading').hide();
             $('.description-panel-content').show();
+          } else if (showDescription) {
+            // Panel is visible but no description yet - show loading
+            $('.description-panel-loading').show();
+            $('.description-panel-content').hide();
           }
         } else {
           $('.ai-button').hide();
           $('.description-panel').removeClass('visible');
           showDescription = false;
+          
+          // Cancel any pending analysis when switching to video
+          if (analysisTimeout) {
+            clearTimeout(analysisTimeout);
+            analysisTimeout = null;
+          }
         }
       }
 
@@ -826,11 +849,24 @@
           $('.description-panel').addClass('visible');
           $('.ai-button').addClass('active');
 
+          // Cancel any pending analysis timeout when toggling on
+          if (analysisTimeout) {
+            clearTimeout(analysisTimeout);
+            analysisTimeout = null;
+          }
+
           // Auto-analyze if no description exists
           if (!descriptions[currentIndex] && !isAnalyzing) {
-            analyzeCurrentImage();
+            // Show loading immediately when toggling on
+            $('.description-panel-loading').show();
+            $('.description-panel-content').hide();
+            
+            // Start analysis with 3 second delay
+            analysisTimeout = setTimeout(() => {
+              analyzeCurrentImage();
+            }, 3000);
           } else if (descriptions[currentIndex]) {
-            // Show existing description
+            // Show existing description immediately
             $('.description-panel-content p').text(descriptions[currentIndex]);
             $('.description-panel-loading').hide();
             $('.description-panel-content').show();
@@ -838,6 +874,12 @@
         } else {
           $('.description-panel').removeClass('visible');
           $('.ai-button').removeClass('active');
+          
+          // Cancel any pending analysis when toggling off
+          if (analysisTimeout) {
+            clearTimeout(analysisTimeout);
+            analysisTimeout = null;
+          }
         }
       }
 
