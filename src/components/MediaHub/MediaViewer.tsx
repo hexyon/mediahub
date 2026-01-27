@@ -244,14 +244,15 @@ const MediaViewer = ({
             <button
               onClick={handleToggleDescription}
               className={cn(
-                "w-8 h-8 glass shadow-soft mr-2",
-                "flex items-center justify-center",
-                "hover:scale-105 active:scale-95 transition-all",
-                "border-[1.5px] border-black",
-                showDescription && "bg-[rgba(255,255,255,0.95)]"
+                "w-8 h-8 mr-2 flex items-center justify-center cursor-pointer",
+                "border-[1.5px] border-black"
               )}
               style={{
                 borderRadius: 0,
+                background: showDescription ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.9)',
+                backdropFilter: 'blur(10px)',
+                WebkitBackdropFilter: 'blur(10px)',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
                 fontFamily: "'Times New Roman', serif",
                 fontSize: '16px',
                 fontStyle: 'italic',
@@ -265,8 +266,16 @@ const MediaViewer = ({
           )}
           <button
             onClick={() => setShowList(!showList)}
-            className="glass rounded-xl px-4 py-2 shadow-soft text-sm font-medium hover:scale-105 active:scale-95 transition-transform bg-[#f5f5f7] text-black"
-            style={{ fontSize: '1.5em' }}
+            className="cursor-pointer"
+            style={{
+              fontSize: '1.5em',
+              color: '#000',
+              backgroundColor: '#f5f5f7',
+              padding: '5px 10px',
+              borderRadius: '10px',
+              border: 'none',
+              outline: 'none'
+            }}
           >
             {currentIndex + 1}
           </button>
