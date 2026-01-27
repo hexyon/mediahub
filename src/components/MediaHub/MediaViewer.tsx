@@ -4,6 +4,7 @@ import { MediaItem } from './types';
 import DescriptionPanel from './DescriptionPanel';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { FrameVariant } from '../Settings/FrameVariants';
 
 interface MediaViewerProps {
   media: MediaItem[];
@@ -12,6 +13,7 @@ interface MediaViewerProps {
   onClose: () => void;
   onUpdateDescription: (id: string, description: string) => void;
   blurEnabled: boolean;
+  frameVariant: FrameVariant;
 }
 
 const MediaViewer = ({
@@ -21,6 +23,7 @@ const MediaViewer = ({
   onClose,
   onUpdateDescription,
   blurEnabled,
+  frameVariant,
 }: MediaViewerProps) => {
   const [showList, setShowList] = useState(false);
   const [showDescription, setShowDescription] = useState(false);
@@ -409,21 +412,27 @@ const MediaViewer = ({
         </>
       )}
 
-      {/* Media display */}
-      {currentMedia?.type === 'image' ? (
-        <img
-          src={currentMedia.url}
-          alt={currentMedia.name}
-          className="max-w-[90%] max-h-[90vh] rounded-2xl shadow-elevated object-contain animate-fade-in z-[1] relative"
-        />
-      ) : currentMedia?.type === 'video' ? (
-        <video
-          ref={videoRef}
-          src={currentMedia.url}
-          controls
-          className="max-w-[90%] max-h-[90vh] rounded-[20px] shadow-elevated animate-fade-in z-[1] relative"
-        />
-      ) : null}
+      {/* Media display with frame variants */}
+      <div className="relative z-[1] animate-fade-in flex items-center justify-center">
+        {currentMedia?.type === 'image' ? (
+          <div className={cn("relative inline-block", `frame-${frameVariant}`)}>
+            <img
+              src={currentMedia.url}
+              alt={currentMedia.name}
+              className="block max-w-[80vw] max-h-[80vh] w-auto h-auto object-contain"
+            />
+          </div>
+        ) : currentMedia?.type === 'video' ? (
+          <div className={cn("relative inline-block", `frame-${frameVariant}`)}>
+            <video
+              ref={videoRef}
+              src={currentMedia.url}
+              controls
+              className="block max-w-[80vw] max-h-[80vh] w-auto h-auto"
+            />
+          </div>
+        ) : null}
+      </div>
 
       {/* Click outside to close list */}
       {showList && (

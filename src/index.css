@@ -177,3 +177,436 @@
 .animate-slide-in-left {
   animation: slide-in-left 0.2s ease-out;
 }
+
+/* Simple Vintage Corner Accents */
+.simple-vintage-frame {
+  position: relative;
+  display: inline-block;
+}
+
+.corner-accent {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.corner-accent::before,
+.corner-accent::after {
+  content: '';
+  position: absolute;
+  background: #d4a574;
+  box-shadow: 0 0 8px rgba(212, 165, 116, 0.4);
+}
+
+/* Top left corner */
+.corner-tl {
+  top: -8px;
+  left: -8px;
+}
+
+.corner-tl::before {
+  top: 0;
+  left: 0;
+  width: 25px;
+  height: 2px;
+  border-radius: 1px;
+}
+
+.corner-tl::after {
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 25px;
+  border-radius: 1px;
+}
+
+/* Top right corner */
+.corner-tr {
+  top: -8px;
+  right: -8px;
+}
+
+.corner-tr::before {
+  top: 0;
+  right: 0;
+  width: 25px;
+  height: 2px;
+  border-radius: 1px;
+}
+
+.corner-tr::after {
+  top: 0;
+  right: 0;
+  width: 2px;
+  height: 25px;
+  border-radius: 1px;
+}
+
+/* Bottom left corner */
+.corner-bl {
+  bottom: -8px;
+  left: -8px;
+}
+
+.corner-bl::before {
+  bottom: 0;
+  left: 0;
+  width: 25px;
+  height: 2px;
+  border-radius: 1px;
+}
+
+.corner-bl::after {
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  height: 25px;
+  border-radius: 1px;
+}
+
+/* Bottom right corner */
+.corner-br {
+  bottom: -8px;
+  right: -8px;
+}
+
+.corner-br::before {
+  bottom: 0;
+  right: 0;
+  width: 25px;
+  height: 2px;
+  border-radius: 1px;
+}
+
+.corner-br::after {
+  bottom: 0;
+  right: 0;
+  width: 2px;
+  height: 25px;
+  border-radius: 1px;
+}
+
+/* Frame Variants */
+
+/* 1. No Frame */
+.frame-none {
+  display: inline-block;
+}
+
+.frame-none img,
+.frame-none video {
+  border-radius: 1.5rem;
+  display: block;
+}
+
+/* 2. Classic Wood Frame */
+.frame-classic-wood {
+  display: inline-block;
+  padding: 24px;
+  background: linear-gradient(135deg, #8b6f47 0%, #6b5635 100%);
+  border-radius: 8px;
+  box-shadow: 
+    0 0 0 4px #4a3a24,
+    0 0 0 6px #8b6f47,
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+
+.frame-classic-wood img,
+.frame-classic-wood video {
+  display: block;
+  border: 3px solid #2c2416;
+  border-radius: 4px;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+/* 3. Elegant Gold Frame */
+.frame-elegant-gold {
+  display: inline-block;
+  padding: 32px;
+  background: linear-gradient(135deg, #f4d03f 0%, #d4af37 50%, #c5a028 100%);
+  border-radius: 12px;
+  box-shadow: 
+    0 0 0 2px #8b7500,
+    0 0 0 8px #f4d03f,
+    0 0 0 10px #8b7500,
+    0 12px 48px rgba(212, 175, 55, 0.4),
+    inset 0 2px 6px rgba(255, 255, 255, 0.3);
+  position: relative;
+}
+
+.frame-elegant-gold::before {
+  content: '';
+  position: absolute;
+  inset: 20px;
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+.frame-elegant-gold img,
+.frame-elegant-gold video {
+  display: block;
+  border: 4px solid #6b5a00;
+  border-radius: 4px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* 4. Modern White Frame */
+.frame-modern-white {
+  display: inline-block;
+  padding: 40px;
+  background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 4px;
+  box-shadow: 
+    0 0 0 1px #e0e0e0,
+    0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+.frame-modern-white img,
+.frame-modern-white video {
+  display: block;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* 5. Vintage Ornate Frame */
+.frame-vintage-ornate {
+  display: inline-block;
+  padding: 48px;
+  background: 
+    linear-gradient(135deg, #3d2817 0%, #5c4033 50%, #3d2817 100%);
+  border-radius: 16px;
+  box-shadow: 
+    0 0 0 3px #8b6f47,
+    0 0 0 6px #2c1810,
+    0 0 0 12px #8b6f47,
+    0 0 0 14px #2c1810,
+    0 16px 64px rgba(0, 0, 0, 0.5),
+    inset 0 0 40px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.frame-vintage-ornate::before,
+.frame-vintage-ornate::after {
+  content: '';
+  position: absolute;
+  border: 3px solid #d4a574;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.frame-vintage-ornate::before {
+  inset: 32px;
+  box-shadow: 0 0 12px rgba(212, 165, 116, 0.3);
+}
+
+.frame-vintage-ornate::after {
+  inset: 40px;
+  border-width: 1px;
+  opacity: 0.5;
+}
+
+.frame-vintage-ornate img,
+.frame-vintage-ornate video {
+  display: block;
+  border: 6px solid #1a0f08;
+  border-radius: 4px;
+  box-shadow: 
+    inset 0 0 20px rgba(0, 0, 0, 0.5),
+    0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* 6. Minimalist Black Frame */
+.frame-minimalist-black {
+  display: inline-block;
+  padding: 20px;
+  background: linear-gradient(to bottom, #1a1a1a 0%, #0a0a0a 100%);
+  border-radius: 2px;
+  box-shadow: 
+    0 0 0 1px #000000,
+    0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+.frame-minimalist-black img,
+.frame-minimalist-black video {
+  display: block;
+  border: 2px solid #000000;
+  border-radius: 0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* 7. Rustic Barnwood Frame */
+.frame-rustic-barnwood {
+  display: inline-block;
+  padding: 28px;
+  background: 
+    linear-gradient(135deg, #6b584e 0%, #8b7766 25%, #5d4e41 50%, #7a6a5a 75%, #6b584e 100%);
+  border-radius: 6px;
+  box-shadow: 
+    0 0 0 3px #3d3228,
+    0 0 0 6px #8b7766,
+    0 12px 48px rgba(0, 0, 0, 0.35),
+    inset 0 0 30px rgba(0, 0, 0, 0.2),
+    inset 0 2px 0 rgba(255, 255, 255, 0.05);
+  position: relative;
+}
+
+.frame-rustic-barnwood::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 80px,
+      rgba(0, 0, 0, 0.1) 80px,
+      rgba(0, 0, 0, 0.1) 82px
+    );
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+.frame-rustic-barnwood img,
+.frame-rustic-barnwood video {
+  display: block;
+  border: 4px solid #2c241c;
+  border-radius: 2px;
+  box-shadow: 
+    inset 0 0 12px rgba(0, 0, 0, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 8. Art Deco Frame */
+.frame-art-deco {
+  display: inline-block;
+  padding: 36px;
+  background: 
+    linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #0f0f0f 100%);
+  border-radius: 0;
+  box-shadow: 
+    0 0 0 2px #d4af37,
+    0 0 0 4px #0f0f0f,
+    0 0 0 8px #d4af37,
+    0 0 0 9px #0f0f0f,
+    0 12px 48px rgba(212, 175, 55, 0.3);
+  position: relative;
+}
+
+.frame-art-deco::before {
+  content: '';
+  position: absolute;
+  inset: 24px;
+  border: 2px solid #d4af37;
+  clip-path: polygon(
+    0 20px, 20px 0, calc(100% - 20px) 0, 100% 20px,
+    100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%, 0 calc(100% - 20px)
+  );
+  pointer-events: none;
+}
+
+.frame-art-deco::after {
+  content: '';
+  position: absolute;
+  inset: 28px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  pointer-events: none;
+}
+
+.frame-art-deco img,
+.frame-art-deco video {
+  display: block;
+  border: 3px solid #0a0a0a;
+  box-shadow: 
+    0 0 0 1px #d4af37,
+    0 6px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* 9. Soft Pastel Frame */
+.frame-soft-pastel {
+  display: inline-block;
+  padding: 36px;
+  background: linear-gradient(135deg, #ffe4f5 0%, #e4d5f7 50%, #d5e8f7 100%);
+  border-radius: 20px;
+  box-shadow: 
+    0 0 0 3px #ffc4e8,
+    0 0 0 6px #f5e4ff,
+    0 12px 48px rgba(255, 192, 232, 0.3),
+    inset 0 2px 8px rgba(255, 255, 255, 0.5);
+}
+
+.frame-soft-pastel img,
+.frame-soft-pastel video {
+  display: block;
+  border: 4px solid #ffffff;
+  border-radius: 12px;
+  box-shadow: 
+    0 0 0 2px #f5c4e8,
+    0 6px 24px rgba(255, 192, 232, 0.2);
+}
+
+/* 10. Museum Mat Frame */
+.frame-museum-mat {
+  display: inline-block;
+  padding: 60px;
+  background: linear-gradient(to bottom, #f8f8f6 0%, #efefed 100%);
+  border-radius: 2px;
+  box-shadow: 
+    0 0 0 1px #d0d0ce,
+    0 0 0 3px #ffffff,
+    0 0 0 4px #a0a09e,
+    0 8px 32px rgba(0, 0, 0, 0.12);
+  position: relative;
+}
+
+.frame-museum-mat::before {
+  content: '';
+  position: absolute;
+  inset: 48px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  pointer-events: none;
+}
+
+.frame-museum-mat img,
+.frame-museum-mat video {
+  display: block;
+  border: 1px solid #d0d0ce;
+  box-shadow: 
+    0 0 0 12px #ffffff,
+    0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* 11. Polaroid Style Frame */
+.frame-polaroid-style {
+  display: inline-block;
+  padding: 16px 16px 48px 16px;
+  background: linear-gradient(to bottom, #ffffff 0%, #f5f5f0 100%);
+  border-radius: 4px;
+  box-shadow: 
+    0 0 0 1px #e0e0dc,
+    0 8px 32px rgba(0, 0, 0, 0.15),
+    0 16px 48px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.frame-polaroid-style::after {
+  content: '';
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  height: 32px;
+  background: transparent;
+  pointer-events: none;
+}
+
+.frame-polaroid-style img,
+.frame-polaroid-style video {
+  display: block;
+  border: 1px solid #d0d0cc;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
