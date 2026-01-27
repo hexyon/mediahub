@@ -311,10 +311,11 @@ const MediaViewer = ({
             onClick={goToPrev}
             onMouseEnter={() => setHideLeftArrow(false)}
             className={cn(
-              "absolute left-6 w-11 h-11 rounded-full flex items-center justify-center z-10 transition-all",
+              "absolute left-6 w-11 h-11 rounded-full z-10 transition-all",
               hideLeftArrow && "opacity-0"
             )}
             style={{
+              position: 'absolute',
               background: 'rgba(255, 255, 255, 0.9)',
               boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
               backdropFilter: 'blur(10px)',
@@ -338,11 +339,16 @@ const MediaViewer = ({
             }}
           >
             <div
-              className="w-[10px] h-[10px] border-solid border-black opacity-80"
               style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                width: '10px',
+                height: '10px',
+                border: 'solid #000',
                 borderWidth: '2px 2px 0 0',
-                transform: 'rotate(-135deg) translate(-35%, -50%)',
-                transformOrigin: 'center'
+                opacity: 0.8,
+                transform: 'translate(-35%, -50%) rotate(-135deg)'
               }}
             />
           </button>
@@ -350,10 +356,11 @@ const MediaViewer = ({
             onClick={goToNext}
             onMouseEnter={() => setHideRightArrow(false)}
             className={cn(
-              "absolute right-6 w-11 h-11 rounded-full flex items-center justify-center z-10 transition-all",
+              "absolute right-6 w-11 h-11 rounded-full z-10 transition-all",
               hideRightArrow && "opacity-0"
             )}
             style={{
+              position: 'absolute',
               background: 'rgba(255, 255, 255, 0.9)',
               boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
               backdropFilter: 'blur(10px)',
@@ -377,11 +384,16 @@ const MediaViewer = ({
             }}
           >
             <div
-              className="w-[10px] h-[10px] border-solid border-black opacity-80"
               style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                width: '10px',
+                height: '10px',
+                border: 'solid #000',
                 borderWidth: '2px 2px 0 0',
-                transform: 'rotate(45deg) translate(-65%, -50%)',
-                transformOrigin: 'center'
+                opacity: 0.8,
+                transform: 'translate(-65%, -50%) rotate(45deg)'
               }}
             />
           </button>
