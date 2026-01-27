@@ -28,6 +28,8 @@ const MediaViewer = ({
   const [analysisTimeout, setAnalysisTimeoutState] = useState<NodeJS.Timeout | null>(null);
   const [currentBlurIndex, setCurrentBlurIndex] = useState(0);
   const [preloadedImages, setPreloadedImages] = useState<{ [key: number]: HTMLImageElement }>({});
+  const [hideLeftArrow, setHideLeftArrow] = useState(false);
+  const [hideRightArrow, setHideRightArrow] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const blur1Ref = useRef<HTMLDivElement>(null);
   const blur2Ref = useRef<HTMLDivElement>(null);
@@ -36,8 +38,12 @@ const MediaViewer = ({
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight') {
+        setHideLeftArrow(true);
+        setHideRightArrow(false);
         onIndexChange((currentIndex + 1) % media.length);
       } else if (e.key === 'ArrowLeft') {
+        setHideRightArrow(true);
+        setHideLeftArrow(false);
         onIndexChange((currentIndex - 1 + media.length) % media.length);
       } else if (e.key === 'Escape') {
         onClose();
@@ -167,10 +173,14 @@ const MediaViewer = ({
   };
 
   const goToPrev = () => {
+    setHideRightArrow(true);
+    setHideLeftArrow(false);
     onIndexChange((currentIndex - 1 + media.length) % media.length);
   };
 
   const goToNext = () => {
+    setHideLeftArrow(true);
+    setHideRightArrow(false);
     onIndexChange((currentIndex + 1) % media.length);
   };
 
@@ -299,7 +309,11 @@ const MediaViewer = ({
         <>
           <button
             onClick={goToPrev}
-            className="absolute left-6 w-11 h-11 rounded-full bg-[rgba(255,255,255,0.9)] shadow-soft flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-10 backdrop-blur-[10px]"
+            onMouseEnter={() => setHideLeftArrow(false)}
+            className={cn(
+              "absolute left-6 w-11 h-11 rounded-full bg-[rgba(255,255,255,0.9)] shadow-soft flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-10 backdrop-blur-[10px]",
+              hideLeftArrow && "opacity-0"
+            )}
           >
             <div
               className="w-[10px] h-[10px] border-solid border-black opacity-80"
@@ -312,7 +326,11 @@ const MediaViewer = ({
           </button>
           <button
             onClick={goToNext}
-            className="absolute right-6 w-11 h-11 rounded-full bg-[rgba(255,255,255,0.9)] shadow-soft flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-10 backdrop-blur-[10px]"
+            onMouseEnter={() => setHideRightArrow(false)}
+            className={cn(
+              "absolute right-6 w-11 h-11 rounded-full bg-[rgba(255,255,255,0.9)] shadow-soft flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-10 backdrop-blur-[10px]",
+              hideRightArrow && "opacity-0"
+            )}
           >
             <div
               className="w-[10px] h-[10px] border-solid border-black opacity-80"

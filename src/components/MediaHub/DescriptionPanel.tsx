@@ -43,7 +43,7 @@ const DescriptionPanel = ({
           />
           <span className="text-sm text-white">Analyzing...</span>
         </div>
-      ) : (
+      ) : description ? (
         <div 
           className="bg-transparent rounded-lg p-3 h-full overflow-hidden box-border flex items-center justify-center"
           style={{
@@ -58,10 +58,10 @@ const DescriptionPanel = ({
               fontSize: '28px'
             }}
           >
-            {description || 'No description available'}
+            {description}
           </p>
         </div>
-      )}
+      ) : null}
     </div>
   );
 };
