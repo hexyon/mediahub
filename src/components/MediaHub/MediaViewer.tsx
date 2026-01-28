@@ -419,7 +419,7 @@ const MediaViewer = ({
             <img
               src={currentMedia.url}
               alt={currentMedia.name}
-              className="block max-w-[80vw] max-h-[80vh] w-auto h-auto object-contain"
+              className="block max-w-[90vw] max-h-[90vh] w-auto h-auto object-contain"
             />
           </div>
         ) : currentMedia?.type === 'video' ? (
@@ -428,7 +428,7 @@ const MediaViewer = ({
               ref={videoRef}
               src={currentMedia.url}
               controls
-              className="block max-w-[80vw] max-h-[80vh] w-auto h-auto"
+              className="block max-w-[90vw] max-h-[90vh] w-auto h-auto"
             />
           </div>
         ) : null}
