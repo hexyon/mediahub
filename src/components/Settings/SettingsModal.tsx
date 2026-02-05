@@ -53,7 +53,7 @@ const SettingsModal = ({ isOpen, onClose, currentFrame, onFrameChange }: Setting
             {frameVariants.map((variant) => (
               <button
                 key={variant.id}
-                onClick={() => onFrameChange(variant.id)}
+                onClick={() => onFrameChange(currentFrame === variant.id ? 'none' : variant.id)}
                 className={cn(
                   "relative p-4 rounded-xl border-2 transition-all duration-200",
                   "hover:shadow-lg hover:scale-105",

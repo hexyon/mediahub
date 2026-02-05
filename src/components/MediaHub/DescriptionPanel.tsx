@@ -22,7 +22,7 @@ const DescriptionPanel = ({
       className={cn(
         "absolute right-full mr-2 top-0",
         "rounded-xl shadow-elevated",
-        "w-[230px] h-[230px]",
+        "w-[250px] h-[250px]",
         "animate-slide-in-left p-4 box-border"
       )}
       style={{
@@ -34,28 +34,28 @@ const DescriptionPanel = ({
       <div className="flex items-center justify-end mb-2">
         {/* Close button is hidden per design */}
       </div>
-      
+
       {isLoading ? (
         <div className="flex items-center gap-2 py-3">
-          <div 
+          <div
             className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
             style={{ animation: 'spin 0.8s linear infinite' }}
           />
-          <span className="text-sm text-white">Analyzing...</span>
         </div>
       ) : description ? (
-        <div 
+        <div
           className="bg-transparent rounded-lg p-3 h-full overflow-hidden box-border flex items-center justify-center"
           style={{
             wordWrap: 'break-word',
             overflowWrap: 'break-word'
           }}
         >
-          <p 
-            className="leading-[1.3] text-white"
+          <p
+            className="leading-[1.3] text-white italic"
             style={{
-              fontFamily: "'Pacifico', cursive",
-              fontSize: '28px'
+              fontFamily: "'Playfair Display', serif",
+              fontSize: '30px',
+              fontWeight: 900
             }}
           >
             {description}
