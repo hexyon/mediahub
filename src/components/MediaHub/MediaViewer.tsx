@@ -288,8 +288,30 @@ const MediaViewer = ({
       {/* Media list dropdown */}
       {showList && (
         <div
-          className="absolute top-[72px] right-5 bg-white rounded-xl shadow-elevated max-h-[60vh] overflow-y-auto animate-scale-in min-w-[220px] z-20"
+          className="absolute top-[72px] right-5 bg-white rounded-none shadow-elevated max-h-[60vh] overflow-y-auto animate-scale-in min-w-[220px] z-20"
+          style={{
+            scrollbarWidth: 'thin',
+            scrollbarColor: '#D1D1D6 transparent'
+          }}
         >
+          <style>{`
+            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar {
+              width: 4px;
+            }
+            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar-track {
+              background: transparent;
+            }
+            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar-thumb {
+              background-color: #D1D1D6;
+              border-radius: 2px;
+            }
+            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar-thumb:hover {
+              background-color: #B5B5BD;
+            }
+          `}</style>
+          <div className="px-3 py-2 border-b border-[#E0E0E0] bg-[#F5F5F7]">
+            <span className="font-semibold text-sm text-[#111] italic">List</span>
+          </div>
           <ul className="py-0">
             {media.map((item, index) => (
               <li
@@ -301,8 +323,11 @@ const MediaViewer = ({
                 className={cn(
                   "flex items-center gap-2 px-3 py-2 cursor-pointer",
                   "hover:bg-[#F5F5F7] transition-colors",
-                  "border-b border-[#E0E0E0] last:border-b",
-                  index === currentIndex && "border-t-2 border-t-black border-b-2 border-b-black"
+                  "border-b border-[#E0E0E0]",
+                  index === currentIndex 
+                    ? "!border-t-2 !border-t-black !border-b-2 !border-b-black" 
+                    : index === media.length - 1 && "!border-b-0",
+                  (index === 0 || index === media.length - 1) && "bg-[#FAFAFA]"
                 )}
               >
                 <span className="font-semibold text-sm text-[#111]">
@@ -313,6 +338,9 @@ const MediaViewer = ({
               </li>
             ))}
           </ul>
+          <div className="px-3 py-2 border-t border-[#E0E0E0] bg-[#F5F5F7]">
+            <span className="text-xs text-gray-500 font-medium italic">Total: {media.length}</span>
+          </div>
         </div>
       )}
 
