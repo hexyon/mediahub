@@ -4,7 +4,7 @@ import { MediaItem } from './types';
 import DescriptionPanel from './DescriptionPanel';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { FrameVariant } from '../Settings/FrameVariants';
+import { FrameVariant, DesignStyle } from '../Settings/FrameVariants';
 
 interface MediaViewerProps {
   media: MediaItem[];
@@ -14,6 +14,7 @@ interface MediaViewerProps {
   onUpdateDescription: (id: string, description: string) => void;
   blurEnabled: boolean;
   frameVariant: FrameVariant;
+  designStyle: DesignStyle;
 }
 
 const MediaViewer = ({
@@ -24,6 +25,7 @@ const MediaViewer = ({
   onUpdateDescription,
   blurEnabled,
   frameVariant,
+  designStyle,
 }: MediaViewerProps) => {
   const [showList, setShowList] = useState(false);
   const [showDescription, setShowDescription] = useState(false);
@@ -187,14 +189,19 @@ const MediaViewer = ({
     onIndexChange((currentIndex + 1) % media.length);
   };
 
+  const isContentPlus = designStyle === 'contentplus';
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[hsl(var(--blur-overlay))]">
+    <div className={cn(
+      "fixed inset-0 z-50 flex items-center justify-center",
+      isContentPlus ? "bg-[rgba(0,0,0,0.98)]" : "bg-[hsl(var(--blur-overlay))]"
+    )}>
       {/* Blur backgrounds */}
       {blurEnabled && (
         <>
           <div
             ref={blur1Ref}
-            className="absolute top-1/2 left-1/2 w-[120%] h-[120%] -translate-x-1/2 -translate-y-1/2 scale-[1.2]"
+            className="absolute top-1/2 left-1/2 w-[120%] h-[120%] -translate-x-1/2 -translate-y-1/2 scale-[1.2] -z-10"
             style={{
               display: 'none',
               backgroundSize: 'cover',
@@ -202,12 +209,13 @@ const MediaViewer = ({
               filter: 'blur(25px) brightness(0.85)',
               opacity: 0,
               transition: 'opacity 0.15s ease-out',
-              willChange: 'background-image, opacity'
+              willChange: 'background-image, opacity',
+              backgroundColor: '#000'
             }}
           />
           <div
             ref={blur2Ref}
-            className="absolute top-1/2 left-1/2 w-[120%] h-[120%] -translate-x-1/2 -translate-y-1/2 scale-[1.2]"
+            className="absolute top-1/2 left-1/2 w-[120%] h-[120%] -translate-x-1/2 -translate-y-1/2 scale-[1.2] -z-10"
             style={{
               display: 'none',
               backgroundSize: 'cover',
@@ -215,81 +223,108 @@ const MediaViewer = ({
               filter: 'blur(25px) brightness(0.85)',
               opacity: 0,
               transition: 'opacity 0.15s ease-out',
-              willChange: 'background-image, opacity'
+              willChange: 'background-image, opacity',
+              backgroundColor: '#000'
             }}
           />
         </>
       )}
 
-      {/* Exit button */}
-      <button
-        onClick={onClose}
-        className="absolute top-5 left-5 w-[50px] h-[50px] z-10"
-        style={{
-          background: "url('/exit.png') no-repeat",
-          backgroundSize: 'contain',
-          border: 'none',
-          outline: 'none'
-        }}
-      />
+      {/* Exit button - hidden in ContentPlus mode */}
+      {!isContentPlus && (
+        <button
+          onClick={onClose}
+          className="absolute top-5 left-5 w-[50px] h-[50px] z-10"
+          style={{
+            background: "url('/exit.png') no-repeat",
+            backgroundSize: 'contain',
+            border: 'none',
+            outline: 'none'
+          }}
+        />
+      )}
 
-      {/* Index indicator with description panel */}
-      <div className="absolute top-5 right-5 flex items-center z-10">
-        <div className="relative flex items-center">
-          <DescriptionPanel
-            isOpen={showDescription}
-            description={currentMedia?.description || ''}
-            imageUrl={currentMedia?.url || ''}
-            isLoading={isAnalyzing}
-            onClose={() => setShowDescription(false)}
-          />
-          {currentMedia?.type === 'image' && (
+      {/* Index indicator with description panel - hidden in ContentPlus mode */}
+      {!isContentPlus && (
+        <div className="absolute top-5 right-5 flex items-center z-10">
+          <div className="relative flex items-center">
+            <DescriptionPanel
+              isOpen={showDescription}
+              description={currentMedia?.description || ''}
+              imageUrl={currentMedia?.url || ''}
+              isLoading={isAnalyzing}
+              onClose={() => setShowDescription(false)}
+            />
+            {currentMedia?.type === 'image' && (
+              <button
+                onClick={handleToggleDescription}
+                className={cn(
+                  "w-8 h-8 mr-2 flex items-center justify-center cursor-pointer",
+                  "border-[1.5px] border-black"
+                )}
+                style={{
+                  borderRadius: 0,
+                  background: showDescription ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.9)',
+                  backdropFilter: 'blur(10px)',
+                  WebkitBackdropFilter: 'blur(10px)',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                  fontFamily: "'Times New Roman', serif",
+                  fontSize: '16px',
+                  fontStyle: 'italic',
+                  fontWeight: 'normal',
+                  color: '#000'
+                }}
+                title="AI Description"
+              >
+                i
+              </button>
+            )}
             <button
-              onClick={handleToggleDescription}
-              className={cn(
-                "w-8 h-8 mr-2 flex items-center justify-center cursor-pointer",
-                "border-[1.5px] border-black"
-              )}
+              onClick={() => setShowList(!showList)}
+              className="cursor-pointer"
               style={{
-                borderRadius: 0,
-                background: showDescription ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.9)',
-                backdropFilter: 'blur(10px)',
-                WebkitBackdropFilter: 'blur(10px)',
-                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-                fontFamily: "'Times New Roman', serif",
-                fontSize: '16px',
-                fontStyle: 'italic',
-                fontWeight: 'normal',
-                color: '#000'
+                fontSize: '1.5em',
+                color: '#000',
+                backgroundColor: '#f5f5f7',
+                padding: '5px 10px',
+                borderRadius: '10px',
+                border: 'none',
+                outline: 'none'
               }}
-              title="AI Description"
             >
-              i
+              {currentIndex + 1}
             </button>
-          )}
-          <button
-            onClick={() => setShowList(!showList)}
-            className="cursor-pointer"
-            style={{
-              fontSize: '1.5em',
-              color: '#000',
-              backgroundColor: '#f5f5f7',
-              padding: '5px 10px',
-              borderRadius: '10px',
-              border: 'none',
-              outline: 'none'
-            }}
-          >
-            {currentIndex + 1}
-          </button>
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Media list dropdown */}
-      {showList && (
+      {/* Media list dropdown - hidden in ContentPlus mode */}
+      {!isContentPlus && showList && (
         <div
-          className="absolute top-[72px] right-5 bg-white rounded-xl shadow-elevated max-h-[60vh] overflow-y-auto animate-scale-in min-w-[220px] z-20"
+          className="absolute top-[72px] right-5 bg-white rounded-none shadow-elevated max-h-[60vh] overflow-y-auto animate-scale-in min-w-[220px] z-20"
+          style={{
+            scrollbarWidth: 'thin',
+            scrollbarColor: '#D1D1D6 transparent'
+          }}
         >
+          <style>{`
+            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar {
+              width: 4px;
+            }
+            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar-track {
+              background: transparent;
+            }
+            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar-thumb {
+              background-color: #D1D1D6;
+              border-radius: 2px;
+            }
+            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar-thumb:hover {
+              background-color: #B5B5BD;
+            }
+          `}</style>
+          <div className="px-3 py-2 border-b border-[#E0E0E0] bg-[#F5F5F7]">
+            <span className="font-semibold text-sm text-[#111] italic">List</span>
+          </div>
           <ul className="py-0">
             {media.map((item, index) => (
               <li
@@ -301,8 +336,11 @@ const MediaViewer = ({
                 className={cn(
                   "flex items-center gap-2 px-3 py-2 cursor-pointer",
                   "hover:bg-[#F5F5F7] transition-colors",
-                  "border-b border-[#E0E0E0] last:border-b",
-                  index === currentIndex && "border-t-2 border-t-black border-b-2 border-b-black"
+                  "border-b border-[#E0E0E0]",
+                  index === currentIndex 
+                    ? "!border-t-2 !border-t-black !border-b-2 !border-b-black" 
+                    : index === media.length - 1 && "!border-b-0",
+                  (index === 0 || index === media.length - 1) && "bg-[#FAFAFA]"
                 )}
               >
                 <span className="font-semibold text-sm text-[#111]">
@@ -313,6 +351,9 @@ const MediaViewer = ({
               </li>
             ))}
           </ul>
+          <div className="px-3 py-2 border-t border-[#E0E0E0] bg-[#F5F5F7]">
+            <span className="text-xs text-gray-500 font-medium italic">Total: {media.length}</span>
+          </div>
         </div>
       )}
 
@@ -324,9 +365,15 @@ const MediaViewer = ({
             onMouseEnter={() => setHideLeftArrow(false)}
             className={cn(
               "absolute left-6 w-11 h-11 rounded-full z-10 transition-all",
-              hideLeftArrow && "opacity-0"
+              hideLeftArrow && "opacity-0",
+              isContentPlus && "!w-12 !h-12 !opacity-70 hover:!opacity-100"
             )}
-            style={{
+            style={isContentPlus ? {
+              position: 'absolute',
+              background: 'rgba(255, 255, 255, 0.7)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)'
+            } : {
               position: 'absolute',
               background: 'rgba(255, 255, 255, 0.9)',
               boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
@@ -369,9 +416,15 @@ const MediaViewer = ({
             onMouseEnter={() => setHideRightArrow(false)}
             className={cn(
               "absolute right-6 w-11 h-11 rounded-full z-10 transition-all",
-              hideRightArrow && "opacity-0"
+              hideRightArrow && "opacity-0",
+              isContentPlus && "!w-12 !h-12 !opacity-70 hover:!opacity-100"
             )}
-            style={{
+            style={isContentPlus ? {
+              position: 'absolute',
+              background: 'rgba(255, 255, 255, 0.7)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)'
+            } : {
               position: 'absolute',
               background: 'rgba(255, 255, 255, 0.9)',
               boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
@@ -415,30 +468,49 @@ const MediaViewer = ({
       {/* Media display with frame variants */}
       <div className="relative z-[1] animate-fade-in flex items-center justify-center">
         {currentMedia?.type === 'image' ? (
-          <div className={cn("relative inline-block", `frame-${frameVariant}`)}>
+          <div className={cn(
+            "relative inline-block",
+            !isContentPlus && `frame-${frameVariant}`
+          )}>
             <img
               src={currentMedia.url}
               alt={currentMedia.name}
-              className="block max-w-[90vw] max-h-[90vh] w-auto h-auto object-contain"
+              className={cn(
+                "block w-auto h-auto object-contain",
+                isContentPlus ? "max-w-full max-h-[85vh] rounded-xl shadow-[0_24px_48px_rgba(0,0,0,0.4)]" : "max-w-[90vw] max-h-[90vh]"
+              )}
             />
           </div>
         ) : currentMedia?.type === 'video' ? (
-          <div className={cn("relative inline-block", `frame-${frameVariant}`)}>
+          <div className={cn(
+            "relative inline-block",
+            !isContentPlus && `frame-${frameVariant}`
+          )}>
             <video
               ref={videoRef}
               src={currentMedia.url}
               controls
-              className="block max-w-[90vw] max-h-[90vh] w-auto h-auto"
+              className={cn(
+                "block w-auto h-auto",
+                isContentPlus ? "max-w-full max-h-[85vh] rounded-xl shadow-[0_24px_48px_rgba(0,0,0,0.4)]" : "max-w-[90vw] max-h-[90vh]"
+              )}
             />
           </div>
         ) : null}
       </div>
 
-      {/* Click outside to close list */}
-      {showList && (
+      {/* Click outside to close list or close viewer in ContentPlus mode */}
+      {(showList || isContentPlus) && (
         <div
           className="fixed inset-0 z-[1]"
-          onClick={() => setShowList(false)}
+          onClick={() => {
+            if (showList) {
+              setShowList(false);
+            }
+            if (isContentPlus) {
+              onClose();
+            }
+          }}
         />
       )}
     </div>

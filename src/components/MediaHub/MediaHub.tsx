@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import { MediaItem } from './types';
 import MediaViewer from './MediaViewer';
 import SettingsModal from '../Settings/SettingsModal';
-import { FrameVariant } from '../Settings/FrameVariants';
+import { FrameVariant, DesignStyle } from '../Settings/FrameVariants';
 
 const MediaHub = () => {
   const [media, setMedia] = useState<MediaItem[]>([]);
@@ -13,6 +13,7 @@ const MediaHub = () => {
   const [thumbnailUrl, setThumbnailUrl] = useState<string | null>('/thumbnail.png');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [selectedFrame, setSelectedFrame] = useState<FrameVariant>('none');
+  const [designStyle, setDesignStyle] = useState<DesignStyle>('default');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -215,6 +216,7 @@ const MediaHub = () => {
           onUpdateDescription={handleUpdateDescription}
           blurEnabled={blurEnabled}
           frameVariant={selectedFrame}
+          designStyle={designStyle}
         />
       )}
 
@@ -224,6 +226,8 @@ const MediaHub = () => {
         onClose={() => setIsSettingsOpen(false)}
         currentFrame={selectedFrame}
         onFrameChange={setSelectedFrame}
+        designStyle={designStyle}
+        onDesignStyleChange={setDesignStyle}
       />
     </div>
   );

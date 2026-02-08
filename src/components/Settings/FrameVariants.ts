@@ -8,6 +8,8 @@ export type FrameVariant =
   | 'soft-pastel'
   | 'polaroid-style';
 
+export type DesignStyle = 'default' | 'contentplus';
+
 export interface FrameStyle {
   id: FrameVariant;
   name: string;

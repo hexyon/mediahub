@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { FrameVariant, frameVariants } from './FrameVariants';
+import { FrameVariant, frameVariants, DesignStyle } from './FrameVariants';
 
 interface SettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
   currentFrame: FrameVariant;
   onFrameChange: (frame: FrameVariant) => void;
+  designStyle: DesignStyle;
+  onDesignStyleChange: (style: DesignStyle) => void;
 }
 
-const SettingsModal = ({ isOpen, onClose, currentFrame, onFrameChange }: SettingsModalProps) => {
+const SettingsModal = ({ isOpen, onClose, currentFrame, onFrameChange, designStyle, onDesignStyleChange }: SettingsModalProps) => {
   if (!isOpen) return null;
 
   return (
@@ -47,6 +49,54 @@ const SettingsModal = ({ isOpen, onClose, currentFrame, onFrameChange }: Setting
 
         {/* Content */}
         <div className="p-6 overflow-y-auto max-h-[calc(80vh-80px)]">
+          {/* Design Style Section */}
+          <div className="mb-8">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Design Style</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <button
+                onClick={() => onDesignStyleChange('default')}
+                className={cn(
+                  "relative p-6 rounded-xl border-2 transition-all duration-200",
+                  "hover:shadow-lg hover:scale-105 text-left",
+                  designStyle === 'default'
+                    ? "border-primary bg-primary/5"
+                    : "border-gray-200 hover:border-gray-300"
+                )}
+              >
+                <h4 className="font-semibold text-base text-gray-900 mb-2">Default</h4>
+                <p className="text-sm text-gray-500">Standard viewer with all features</p>
+                {designStyle === 'default' && (
+                  <div className="absolute top-3 right-3 w-5 h-5 bg-primary rounded-full flex items-center justify-center">
+                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                )}
+              </button>
+              
+              <button
+                onClick={() => onDesignStyleChange('contentplus')}
+                className={cn(
+                  "relative p-6 rounded-xl border-2 transition-all duration-200",
+                  "hover:shadow-lg hover:scale-105 text-left",
+                  designStyle === 'contentplus'
+                    ? "border-primary bg-primary/5"
+                    : "border-gray-200 hover:border-gray-300"
+                )}
+              >
+                <h4 className="font-semibold text-base text-gray-900 mb-2">Content Plus</h4>
+                <p className="text-sm text-gray-500">Minimal viewer, image-focused</p>
+                {designStyle === 'contentplus' && (
+                  <div className="absolute top-3 right-3 w-5 h-5 bg-primary rounded-full flex items-center justify-center">
+                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                )}
+              </button>
+            </div>
+          </div>
+
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Frame Style</h3>
           
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
