@@ -477,7 +477,7 @@ const MediaViewer = ({
               alt={currentMedia.name}
               className={cn(
                 "block w-auto h-auto object-contain",
-                isContentPlus ? "max-w-full max-h-[85vh] rounded-xl shadow-[0_24px_48px_rgba(0,0,0,0.4)]" : "max-w-[90vw] max-h-[90vh]"
+                isContentPlus ? "max-w-[90vw] max-h-[90vh] rounded-xl shadow-[0_24px_48px_rgba(0,0,0,0.4)]" : "max-w-[90vw] max-h-[90vh]"
               )}
             />
           </div>
@@ -492,7 +492,7 @@ const MediaViewer = ({
               controls
               className={cn(
                 "block w-auto h-auto",
-                isContentPlus ? "max-w-full max-h-[85vh] rounded-xl shadow-[0_24px_48px_rgba(0,0,0,0.4)]" : "max-w-[90vw] max-h-[90vh]"
+                isContentPlus ? "max-w-[90vw] max-h-[90vh] rounded-xl shadow-[0_24px_48px_rgba(0,0,0,0.4)]" : "max-w-[90vw] max-h-[90vh]"
               )}
             />
           </div>
