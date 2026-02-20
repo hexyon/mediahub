@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,7 +15,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 7%;
 
-    --primary: 211 100% 50%;
+    --primary: 0 0% 20%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 0 0% 96%;
@@ -28,18 +30,17 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 211 100% 50%;
+    --border: 0 0% 88%;
+    --input: 0 0% 88%;
+    --ring: 0 0% 40%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
-    /* Custom tokens */
     --glass-bg: 0 0% 100% / 0.9;
-    --glass-border: 0 0% 0% / 0.05;
-    --shadow-soft: 0 8px 32px hsl(0 0% 0% / 0.15);
-    --shadow-elevated: 0 4px 20px hsl(0 0% 0% / 0.1);
-    --blur-overlay: 0 0% 100% / 0.95;
+    --glass-border: 0 0% 0% / 0.06;
+    --shadow-soft: 0 8px 32px hsl(0 0% 0% / 0.10);
+    --shadow-elevated: 0 4px 20px hsl(0 0% 0% / 0.08);
+    --blur-overlay: 0 0% 97% / 0.96;
     --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
@@ -53,8 +54,8 @@
     --popover: 0 0% 10%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 211 100% 50%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 0 0% 80%;
+    --primary-foreground: 0 0% 7%;
 
     --secondary: 0 0% 15%;
     --secondary-foreground: 0 0% 98%;
@@ -70,7 +71,7 @@
 
     --border: 0 0% 20%;
     --input: 0 0% 20%;
-    --ring: 211 100% 50%;
+    --ring: 0 0% 60%;
 
     --glass-bg: 0 0% 10% / 0.9;
     --glass-border: 0 0% 100% / 0.05;
@@ -93,6 +94,9 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: -apple-system, BlinkMacSystemFont, 'Roboto', 'SF Pro Display', 'Segoe UI', sans-serif;
+    background-color: #f7f7f7;
+    background-image: radial-gradient(circle, #d0d0d0 1px, transparent 1px);
+    background-size: 24px 24px;
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -117,81 +121,100 @@
     transition-timing-function: var(--transition-smooth);
   }
 
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Film counter badge */
+  .film-counter {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    background-color: #f5f5f5;
+    border: 1px solid #d0d0d0;
+    color: #444;
+    padding: 4px 10px;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.08);
+  }
+
+  /* Embossed retro button */
+  .retro-btn {
+    border-radius: 6px;
+    border-top: 1px solid rgba(255,255,255,0.85);
+    border-left: 1px solid rgba(255,255,255,0.6);
+    border-bottom: 1px solid rgba(0,0,0,0.10);
+    border-right: 1px solid rgba(0,0,0,0.08);
+    background: linear-gradient(145deg, #ffffff 0%, #efefef 100%);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8);
+  }
+
+  .retro-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.10), inset 0 1px 3px rgba(0,0,0,0.06);
+  }
+
+  /* Double-border thumbnail */
+  .thumbnail-frame {
+    outline: 2px solid #c8c8c8;
+    outline-offset: 4px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px !important;
+  }
+
+  /* Small caps label */
+  .label-smallcaps {
+    font-variant: small-caps;
+    letter-spacing: 0.12em;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #888;
+  }
+
+  /* Section divider */
+  .section-rule {
+    border: none;
+    border-top: 1px solid #e8e8e8;
+    margin: 1.25rem 0;
+  }
 }
 
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
 
 @keyframes slideInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 @keyframes slide-in-left {
-  from {
-    opacity: 0;
-    transform: translateX(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(10px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
-.animate-fade-in {
-  animation: fade-in 0.3s ease-out;
-}
+.animate-fade-in { animation: fade-in 0.3s ease-out; }
+.animate-scale-in { animation: scale-in 0.2s ease-out; }
+.animate-slide-in-left { animation: slide-in-left 0.2s ease-out; }
 
-.animate-scale-in {
-  animation: scale-in 0.2s ease-out;
-}
-
-.animate-slide-in-left {
-  animation: slide-in-left 0.2s ease-out;
-}
-
-/* Simple Vintage Corner Accents */
-.simple-vintage-frame {
-  position: relative;
-  display: inline-block;
-}
+/* ── Corner Accents ── */
+.simple-vintage-frame { position: relative; display: inline-block; }
 
 .corner-accent {
   position: absolute;
@@ -205,288 +228,94 @@
 .corner-accent::after {
   content: '';
   position: absolute;
-  background: #d4a574;
-  box-shadow: 0 0 8px rgba(212, 165, 116, 0.4);
+  background: #bbb;
+  box-shadow: 0 0 6px rgba(0,0,0,0.15);
 }
 
-/* Top left corner */
-.corner-tl {
-  top: -8px;
-  left: -8px;
-}
+.corner-tl { top: -8px; left: -8px; }
+.corner-tl::before { top: 0; left: 0; width: 25px; height: 2px; border-radius: 1px; }
+.corner-tl::after  { top: 0; left: 0; width: 2px; height: 25px; border-radius: 1px; }
 
-.corner-tl::before {
-  top: 0;
-  left: 0;
-  width: 25px;
-  height: 2px;
-  border-radius: 1px;
-}
+.corner-tr { top: -8px; right: -8px; }
+.corner-tr::before { top: 0; right: 0; width: 25px; height: 2px; border-radius: 1px; }
+.corner-tr::after  { top: 0; right: 0; width: 2px; height: 25px; border-radius: 1px; }
 
-.corner-tl::after {
-  top: 0;
-  left: 0;
-  width: 2px;
-  height: 25px;
-  border-radius: 1px;
-}
+.corner-bl { bottom: -8px; left: -8px; }
+.corner-bl::before { bottom: 0; left: 0; width: 25px; height: 2px; border-radius: 1px; }
+.corner-bl::after  { bottom: 0; left: 0; width: 2px; height: 25px; border-radius: 1px; }
 
-/* Top right corner */
-.corner-tr {
-  top: -8px;
-  right: -8px;
-}
+.corner-br { bottom: -8px; right: -8px; }
+.corner-br::before { bottom: 0; right: 0; width: 25px; height: 2px; border-radius: 1px; }
+.corner-br::after  { bottom: 0; right: 0; width: 2px; height: 25px; border-radius: 1px; }
 
-.corner-tr::before {
-  top: 0;
-  right: 0;
-  width: 25px;
-  height: 2px;
-  border-radius: 1px;
-}
+/* ── Frame Variants ── */
 
-.corner-tr::after {
-  top: 0;
-  right: 0;
-  width: 2px;
-  height: 25px;
-  border-radius: 1px;
-}
+.frame-none { display: inline-block; }
+.frame-none img, .frame-none video { border-radius: 1.5rem; display: block; }
 
-/* Bottom left corner */
-.corner-bl {
-  bottom: -8px;
-  left: -8px;
-}
-
-.corner-bl::before {
-  bottom: 0;
-  left: 0;
-  width: 25px;
-  height: 2px;
-  border-radius: 1px;
-}
-
-.corner-bl::after {
-  bottom: 0;
-  left: 0;
-  width: 2px;
-  height: 25px;
-  border-radius: 1px;
-}
-
-/* Bottom right corner */
-.corner-br {
-  bottom: -8px;
-  right: -8px;
-}
-
-.corner-br::before {
-  bottom: 0;
-  right: 0;
-  width: 25px;
-  height: 2px;
-  border-radius: 1px;
-}
-
-.corner-br::after {
-  bottom: 0;
-  right: 0;
-  width: 2px;
-  height: 25px;
-  border-radius: 1px;
-}
-
-/* Frame Variants */
-
-/* 1. No Frame */
-.frame-none {
-  display: inline-block;
-}
-
-.frame-none img,
-.frame-none video {
-  border-radius: 1.5rem;
-  display: block;
-}
-
-/* 1. Modern White Frame */
 .frame-modern-white {
-  display: inline-block;
-  padding: 24px;
+  display: inline-block; padding: 24px;
   background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
   border-radius: 4px;
-  box-shadow: 
-    0 0 0 1px #e0e0e0,
-    0 8px 32px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0 0 1px #e0e0e0, 0 8px 32px rgba(0,0,0,0.08);
 }
+.frame-modern-white img, .frame-modern-white video { display: block; border-radius: 2px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
 
-.frame-modern-white img,
-.frame-modern-white video {
-  display: block;
-  border-radius: 2px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-/* 2. Minimalist Black Frame */
 .frame-minimalist-black {
-  display: inline-block;
-  padding: 16px;
+  display: inline-block; padding: 16px;
   background: linear-gradient(to bottom, #1a1a1a 0%, #0a0a0a 100%);
   border-radius: 2px;
-  box-shadow: 
-    0 0 0 1px #000000,
-    0 8px 32px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 0 1px #000, 0 8px 32px rgba(0,0,0,0.6);
 }
+.frame-minimalist-black img, .frame-minimalist-black video { display: block; border: 2px solid #000; border-radius: 0; box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
 
-.frame-minimalist-black img,
-.frame-minimalist-black video {
-  display: block;
-  border: 2px solid #000000;
-  border-radius: 0;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-}
-
-/* 3. Classic Black Frame */
 .frame-classic-black {
-  display: inline-block;
-  padding: 20px;
-  background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+  display: inline-block; padding: 20px;
+  background: linear-gradient(135deg, #000 0%, #1a1a1a 50%, #000 100%);
   border-radius: 8px;
-  box-shadow: 
-    0 0 0 2px #333333,
-    0 0 0 4px #000000,
-    0 12px 48px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 0 2px #333, 0 0 0 4px #000, 0 12px 48px rgba(0,0,0,0.8);
 }
+.frame-classic-black img, .frame-classic-black video { display: block; border: 3px solid #1a1a1a; border-radius: 4px; box-shadow: inset 0 0 8px rgba(0,0,0,0.5), 0 4px 16px rgba(0,0,0,0.6); }
 
-.frame-classic-black img,
-.frame-classic-black video {
-  display: block;
-  border: 3px solid #1a1a1a;
-  border-radius: 4px;
-  box-shadow: 
-    inset 0 0 8px rgba(0, 0, 0, 0.5),
-    0 4px 16px rgba(0, 0, 0, 0.6);
-}
-
-/* 4. Vibrant Red Frame */
 .frame-vibrant-red {
-  display: inline-block;
-  padding: 20px;
+  display: inline-block; padding: 20px;
   background: linear-gradient(135deg, #DC143C 0%, #B22222 50%, #8B0000 100%);
   border-radius: 8px;
-  box-shadow: 
-    0 0 0 2px #8B0000,
-    0 0 0 4px #DC143C,
-    0 12px 48px rgba(220, 20, 60, 0.5);
+  box-shadow: 0 0 0 2px #8B0000, 0 0 0 4px #DC143C, 0 12px 48px rgba(220,20,60,0.5);
 }
+.frame-vibrant-red img, .frame-vibrant-red video { display: block; border: 3px solid #660000; border-radius: 4px; box-shadow: inset 0 0 8px rgba(0,0,0,0.4), 0 4px 16px rgba(220,20,60,0.3); }
 
-.frame-vibrant-red img,
-.frame-vibrant-red video {
-  display: block;
-  border: 3px solid #660000;
-  border-radius: 4px;
-  box-shadow: 
-    inset 0 0 8px rgba(0, 0, 0, 0.4),
-    0 4px 16px rgba(220, 20, 60, 0.3);
-}
-
-/* 5. Rustic Barnwood Frame */
 .frame-rustic-barnwood {
-  display: inline-block;
-  padding: 20px;
-  background: 
-    linear-gradient(135deg, #FF7A47 0%, #FF7A47 25%, #FF7A47 50%, #FF7A47 75%, #FF7A47 100%);
+  display: inline-block; padding: 20px;
+  background: linear-gradient(135deg, #FF7A47 0%, #FF7A47 100%);
   border-radius: 6px;
-  box-shadow: 
-    0 0 0 2px #FF7A47,
-    0 0 0 4px #FF7A47,
-    0 12px 48px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 0 0 2px #FF7A47, 0 0 0 4px #FF7A47, 0 12px 48px rgba(0,0,0,0.35);
   position: relative;
 }
-
 .frame-rustic-barnwood::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: 
-    repeating-linear-gradient(
-      90deg,
-      transparent 0px,
-      transparent 80px,
-      rgba(0, 0, 0, 0.1) 80px,
-      rgba(0, 0, 0, 0.1) 82px
-    );
-  border-radius: 6px;
-  pointer-events: none;
+  content: ''; position: absolute; inset: 0;
+  background: repeating-linear-gradient(90deg, transparent 0px, transparent 80px, rgba(0,0,0,0.1) 80px, rgba(0,0,0,0.1) 82px);
+  border-radius: 6px; pointer-events: none;
 }
+.frame-rustic-barnwood img, .frame-rustic-barnwood video { display: block; border: 3px solid #fff; border-radius: 2px; box-shadow: inset 0 0 12px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2); }
 
-.frame-rustic-barnwood img,
-.frame-rustic-barnwood video {
-  display: block;
-  border: 3px solid #ffffff;
-  border-radius: 2px;
-  box-shadow: 
-    inset 0 0 12px rgba(0, 0, 0, 0.3),
-    0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-/* 6. Soft Pastel Frame */
 .frame-soft-pastel {
-  display: inline-block;
-  padding: 24px;
+  display: inline-block; padding: 24px;
   background: linear-gradient(135deg, #FF2D55 0%, #FF375F 50%, #FF2D55 100%);
   border-radius: 20px;
-  box-shadow: 
-    0 0 0 1px rgba(0, 0, 0, 0.04),
-    0 0 0 3px #1C1C1E,
-    0 0 0 4px rgba(255, 45, 85, 0.2),
-    0 20px 60px rgba(255, 45, 85, 0.3),
-    0 8px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.04), 0 0 0 3px #1C1C1E, 0 0 0 4px rgba(255,45,85,0.2), 0 20px 60px rgba(255,45,85,0.3), 0 8px 16px rgba(0,0,0,0.15);
 }
+.frame-soft-pastel img, .frame-soft-pastel video { display: block; border: 3px solid #fff; border-radius: 14px; box-shadow: 0 0 0 1px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.08); }
 
-.frame-soft-pastel img,
-.frame-soft-pastel video {
-  display: block;
-  border: 3px solid #FFFFFF;
-  border-radius: 14px;
-  box-shadow: 
-    0 0 0 1px rgba(0, 0, 0, 0.04),
-    0 4px 16px rgba(0, 0, 0, 0.12),
-    0 1px 3px rgba(0, 0, 0, 0.08);
-}
-
-/* 7. Polaroid Style Frame */
 .frame-polaroid-style {
-  display: inline-block;
-  padding: 12px 12px 36px 12px;
+  display: inline-block; padding: 12px 12px 36px 12px;
   background: linear-gradient(to bottom, #ffffff 0%, #f5f5f0 100%);
   border-radius: 4px;
-  box-shadow: 
-    0 0 0 1px #e0e0dc,
-    0 8px 32px rgba(0, 0, 0, 0.15),
-    0 16px 48px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 0 1px #e0e0dc, 0 8px 32px rgba(0,0,0,0.15), 0 16px 48px rgba(0,0,0,0.1);
   position: relative;
 }
-
 .frame-polaroid-style::after {
-  content: '';
-  position: absolute;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 24px);
-  height: 24px;
-  background: transparent;
-  pointer-events: none;
+  content: ''; position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+  width: calc(100% - 24px); height: 24px; background: transparent; pointer-events: none;
 }
-
-.frame-polaroid-style img,
-.frame-polaroid-style video {
-  display: block;
-  border: 1px solid #d0d0cc;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-
-
+.frame-polaroid-style img, .frame-polaroid-style video { display: block; border: 1px solid #d0d0cc; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }

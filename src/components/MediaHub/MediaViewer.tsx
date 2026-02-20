@@ -281,18 +281,10 @@ const MediaViewer = ({
             )}
             <button
               onClick={() => setShowList(!showList)}
-              className="cursor-pointer"
-              style={{
-                fontSize: '1.5em',
-                color: '#000',
-                backgroundColor: '#f5f5f7',
-                padding: '5px 10px',
-                borderRadius: '10px',
-                border: 'none',
-                outline: 'none'
-              }}
+              className="film-counter cursor-pointer"
+              style={{ outline: 'none' }}
             >
-              {currentIndex + 1}
+              {String(currentIndex + 1).padStart(2, '0')}
             </button>
           </div>
         </div>
@@ -364,103 +356,67 @@ const MediaViewer = ({
             onClick={goToPrev}
             onMouseEnter={() => setHideLeftArrow(false)}
             className={cn(
-              "absolute left-6 w-11 h-11 rounded-full z-10 transition-all",
+              "absolute left-6 z-10 transition-all duration-200",
               hideLeftArrow && "opacity-0",
-              isContentPlus && "!w-12 !h-12 !opacity-70 hover:!opacity-100"
             )}
-            style={isContentPlus ? {
-              position: 'absolute',
-              background: 'rgba(255, 255, 255, 0.7)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)'
-            } : {
-              position: 'absolute',
-              background: 'rgba(255, 255, 255, 0.9)',
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-              backdropFilter: 'blur(10px)',
-              WebkitBackdropFilter: 'blur(10px)'
+            style={{
+              background: 'transparent',
+              border: 'none',
+              outline: 'none',
+              fontFamily: "'Georgia', 'Times New Roman', serif",
+              fontSize: '2rem',
+              color: isContentPlus ? 'rgba(255,255,255,0.85)' : '#2a1f0f',
+              lineHeight: 1,
+              padding: '4px 8px',
+              borderBottom: isContentPlus ? '1px solid rgba(255,255,255,0.3)' : '1px solid transparent',
+              opacity: isContentPlus ? 0.7 : 0.75,
+              cursor: 'pointer',
             }}
             onMouseOver={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.95)';
-              e.currentTarget.style.transform = 'scale(1.05)';
+              e.currentTarget.style.opacity = '1';
+              e.currentTarget.style.borderBottom = isContentPlus ? '1px solid rgba(255,255,255,0.6)' : '1px solid #C8922A';
+              e.currentTarget.style.color = isContentPlus ? '#fff' : '#C8922A';
             }}
             onMouseOut={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.9)';
-              e.currentTarget.style.transform = 'scale(1)';
-            }}
-            onMouseDown={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 1)';
-              e.currentTarget.style.transform = 'scale(0.95)';
-            }}
-            onMouseUp={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.95)';
-              e.currentTarget.style.transform = 'scale(1.05)';
+              e.currentTarget.style.opacity = isContentPlus ? '0.7' : '0.75';
+              e.currentTarget.style.borderBottom = isContentPlus ? '1px solid rgba(255,255,255,0.3)' : '1px solid transparent';
+              e.currentTarget.style.color = isContentPlus ? 'rgba(255,255,255,0.85)' : '#2a1f0f';
             }}
           >
-            <div
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                width: '10px',
-                height: '10px',
-                border: 'solid #000',
-                borderWidth: '2px 2px 0 0',
-                opacity: 0.8,
-                transform: 'translate(-35%, -50%) rotate(-135deg)'
-              }}
-            />
+            &#8592;
           </button>
           <button
             onClick={goToNext}
             onMouseEnter={() => setHideRightArrow(false)}
             className={cn(
-              "absolute right-6 w-11 h-11 rounded-full z-10 transition-all",
+              "absolute right-6 z-10 transition-all duration-200",
               hideRightArrow && "opacity-0",
-              isContentPlus && "!w-12 !h-12 !opacity-70 hover:!opacity-100"
             )}
-            style={isContentPlus ? {
-              position: 'absolute',
-              background: 'rgba(255, 255, 255, 0.7)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)'
-            } : {
-              position: 'absolute',
-              background: 'rgba(255, 255, 255, 0.9)',
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-              backdropFilter: 'blur(10px)',
-              WebkitBackdropFilter: 'blur(10px)'
+            style={{
+              background: 'transparent',
+              border: 'none',
+              outline: 'none',
+              fontFamily: "'Georgia', 'Times New Roman', serif",
+              fontSize: '2rem',
+              color: isContentPlus ? 'rgba(255,255,255,0.85)' : '#2a1f0f',
+              lineHeight: 1,
+              padding: '4px 8px',
+              borderBottom: isContentPlus ? '1px solid rgba(255,255,255,0.3)' : '1px solid transparent',
+              opacity: isContentPlus ? 0.7 : 0.75,
+              cursor: 'pointer',
             }}
             onMouseOver={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.95)';
-              e.currentTarget.style.transform = 'scale(1.05)';
+              e.currentTarget.style.opacity = '1';
+              e.currentTarget.style.borderBottom = isContentPlus ? '1px solid rgba(255,255,255,0.6)' : '1px solid #C8922A';
+              e.currentTarget.style.color = isContentPlus ? '#fff' : '#C8922A';
             }}
             onMouseOut={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.9)';
-              e.currentTarget.style.transform = 'scale(1)';
-            }}
-            onMouseDown={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 1)';
-              e.currentTarget.style.transform = 'scale(0.95)';
-            }}
-            onMouseUp={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.95)';
-              e.currentTarget.style.transform = 'scale(1.05)';
+              e.currentTarget.style.opacity = isContentPlus ? '0.7' : '0.75';
+              e.currentTarget.style.borderBottom = isContentPlus ? '1px solid rgba(255,255,255,0.3)' : '1px solid transparent';
+              e.currentTarget.style.color = isContentPlus ? 'rgba(255,255,255,0.85)' : '#2a1f0f';
             }}
           >
-            <div
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                width: '10px',
-                height: '10px',
-                border: 'solid #000',
-                borderWidth: '2px 2px 0 0',
-                opacity: 0.8,
-                transform: 'translate(-65%, -50%) rotate(45deg)'
-              }}
-            />
+            &#8594;
           </button>
         </>
       )}
