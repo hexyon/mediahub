@@ -37,11 +37,7 @@ const DescriptionPanel = ({
         <div className="absolute inset-[1px] rounded-[27px] border border-white/10" />
 
         <div className="relative flex min-h-[228px] flex-col justify-between p-5">
-          <div>
-            <span className="inline-flex rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-white/72 backdrop-blur-md">
-              AI SUMMARY
-            </span>
-          </div>
+          <div className="h-[30px]" aria-hidden="true" />
 
           {isLoading ? (
             <div className="flex items-center gap-3 text-white/80" role="status" aria-live="polite">
@@ -58,9 +54,9 @@ const DescriptionPanel = ({
             </div>
           ) : hasDescription ? (
             <p
-              className="max-w-[14ch] text-left text-[25px] font-semibold leading-[1.08] tracking-[-0.035em] text-white"
+              className="max-w-[14ch] text-left text-[30px] font-black italic leading-[1.12] text-white"
               style={{
-                fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif",
+                fontFamily: "'Playfair Display', 'DM Serif Display', Georgia, serif",
                 textShadow: '0 8px 30px rgba(0,0,0,0.35)',
               }}
             >
