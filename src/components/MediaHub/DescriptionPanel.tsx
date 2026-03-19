@@ -26,23 +26,29 @@ const DescriptionPanel = ({
         "rounded-xl shadow-elevated",
         "w-[250px] h-[250px]",
         "animate-slide-in-left p-4 box-border",
-        "relative overflow-hidden border border-white/10"
+        "relative isolate overflow-hidden border border-white/10"
       )}
+      style={{
+        backfaceVisibility: 'hidden',
+        WebkitBackfaceVisibility: 'hidden',
+        transform: 'translateZ(0)',
+      }}
       onClick={(e) => e.stopPropagation()}
     >
       <div
-        className="absolute inset-0"
+        className="absolute -inset-4 rounded-[18px]"
         style={{
           backgroundImage: `url(${backgroundImage})`,
           backgroundPosition: 'center',
           backgroundSize: 'cover',
           filter: 'blur(18px) saturate(0.82) brightness(0.68)',
-          transform: 'scale(1.14)',
+          backfaceVisibility: 'hidden',
+          WebkitBackfaceVisibility: 'hidden',
         }}
       />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.14)_0%,rgba(255,255,255,0.06)_20%,rgba(18,24,38,0.34)_55%,rgba(8,10,16,0.6)_100%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.18),transparent_56%)]" />
-      <div className="absolute inset-[1px] rounded-[11px] border border-white/8" />
+      <div className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[linear-gradient(180deg,rgba(255,255,255,0.14)_0%,rgba(255,255,255,0.06)_20%,rgba(18,24,38,0.34)_55%,rgba(8,10,16,0.6)_100%)]" />
+      <div className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.18),transparent_56%)]" />
+      <div className="pointer-events-none absolute inset-0 rounded-[inherit] ring-1 ring-inset ring-white/8" />
 
       <div className="relative z-10 flex items-center justify-end mb-2">
         {/* Close button is hidden per design */}

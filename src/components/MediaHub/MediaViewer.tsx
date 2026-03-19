@@ -279,14 +279,14 @@ const MediaViewer = ({
                 i
               </button>
             )}
-            <button
-              onClick={() => setShowList(!showList)}
-              className="film-counter cursor-pointer"
-              style={{ outline: 'none' }}
-            >
-              {String(currentIndex + 1).padStart(2, '0')}
-            </button>
           </div>
+          <button
+            onClick={() => setShowList(!showList)}
+            className="film-counter cursor-pointer"
+            style={{ outline: 'none' }}
+          >
+            {String(currentIndex + 1).padStart(2, '0')}
+          </button>
         </div>
       )}
 
