@@ -99,7 +99,7 @@ const MediaHub = () => {
           className="cursor-pointer transition-transform duration-300 hover:scale-105"
         >
           {thumbnailUrl ? (
-            <img src="/thumbnail.png" alt="Thumbnail" className="w-[200px] h-[200px] object-cover" style={{ borderRadius: '18px', boxShadow: '0 4px 24px rgba(0,0,0,0.13)', display: 'block' }} />
+            <img src={thumbnailUrl} alt="Thumbnail" className="w-[200px] h-[200px] object-cover" style={{ borderRadius: '18px', boxShadow: '0 4px 24px rgba(0,0,0,0.13)', display: 'block' }} />
           ) : (
             <div className="w-[200px] h-[200px] flex items-center justify-center" style={{ borderRadius: '18px', boxShadow: '0 4px 24px rgba(0,0,0,0.13)', background: '#fff' }}>
               <svg className="w-12 h-12 opacity-30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
