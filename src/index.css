@@ -94,9 +94,7 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: -apple-system, BlinkMacSystemFont, 'Roboto', 'SF Pro Display', 'Segoe UI', sans-serif;
-    background-color: #f7f7f7;
-    background-image: radial-gradient(circle, #d0d0d0 1px, transparent 1px);
-    background-size: 24px 24px;
+    background-color: #ffffff;
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;

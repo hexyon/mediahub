@@ -96,24 +96,17 @@ const MediaHub = () => {
         {/* Thumbnail */}
         <div
           onClick={handleThumbnailClick}
-          className={cn(
-            "w-[200px] h-[200px] overflow-hidden thumbnail-frame",
-            "cursor-pointer",
-            "transition-transform duration-300 hover:scale-105",
-            "bg-white flex items-center justify-center"
-          )}
-          style={{ boxShadow: '0 4px 18px rgba(0,0,0,0.10)' }}
+          className="cursor-pointer transition-transform duration-300 hover:scale-105"
         >
           {thumbnailUrl ? (
-            <img src={thumbnailUrl} alt="Thumbnail" className="w-full h-full object-cover" />
+            <img src="/thumbnail.png" alt="Thumbnail" className="w-[200px] h-[200px] object-cover" style={{ borderRadius: '18px', boxShadow: '0 4px 24px rgba(0,0,0,0.13)', display: 'block' }} />
           ) : (
-            <div className="text-muted-foreground text-center px-4">
-              <svg className="w-12 h-12 mx-auto mb-2 opacity-40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <div className="w-[200px] h-[200px] flex items-center justify-center" style={{ borderRadius: '18px', boxShadow: '0 4px 24px rgba(0,0,0,0.13)', background: '#fff' }}>
+              <svg className="w-12 h-12 opacity-30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <rect x="3" y="3" width="18" height="18" rx="2" />
                 <circle cx="8.5" cy="8.5" r="1.5" />
                 <path d="M21 15l-5-5L5 21" />
               </svg>
-              <span className="text-sm" style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic', color: '#aaa' }}>No media</span>
             </div>
           )}
         </div>
