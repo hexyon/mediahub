@@ -253,25 +253,26 @@ const MediaViewer = ({
               description={currentMedia?.description || ''}
               imageUrl={currentMedia?.url || ''}
               isLoading={isAnalyzing}
+              onClose={() => setShowDescription(false)}
             />
             {currentMedia?.type === 'image' && (
               <button
                 onClick={handleToggleDescription}
-                aria-pressed={showDescription}
                 className={cn(
-                  "mr-2 flex h-11 w-11 items-center justify-center cursor-pointer rounded-[14px]",
-                  "border border-white/25 transition-all duration-200"
+                  "w-8 h-8 mr-2 flex items-center justify-center cursor-pointer",
+                  "border-[1.5px] border-black"
                 )}
                 style={{
-                  background: showDescription ? 'rgba(17, 24, 39, 0.78)' : 'rgba(255, 255, 255, 0.72)',
-                  backdropFilter: 'blur(18px) saturate(140%)',
-                  WebkitBackdropFilter: 'blur(18px) saturate(140%)',
-                  boxShadow: '0 12px 30px rgba(15, 23, 42, 0.14)',
-                  fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif",
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  letterSpacing: '-0.02em',
-                  color: showDescription ? 'rgba(255,255,255,0.96)' : 'rgba(15,23,42,0.78)'
+                  borderRadius: 0,
+                  background: showDescription ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.9)',
+                  backdropFilter: 'blur(10px)',
+                  WebkitBackdropFilter: 'blur(10px)',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                  fontFamily: "'Times New Roman', serif",
+                  fontSize: '16px',
+                  fontStyle: 'italic',
+                  fontWeight: 'normal',
+                  color: '#000'
                 }}
                 title="AI Description"
               >

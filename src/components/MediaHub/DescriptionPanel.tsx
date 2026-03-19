@@ -1,8 +1,11 @@
+import { cn } from '@/lib/utils';
+
 interface DescriptionPanelProps {
   isOpen: boolean;
   description: string;
   imageUrl: string;
   isLoading: boolean;
+  onClose: () => void;
 }
 
 const DescriptionPanel = ({
@@ -10,68 +13,68 @@ const DescriptionPanel = ({
   description,
   imageUrl,
   isLoading,
+  onClose,
 }: DescriptionPanelProps) => {
   if (!isOpen) return null;
 
   const backgroundImage = imageUrl || '/background/background.png';
-  const hasDescription = description.trim().length > 0;
 
   return (
     <div
-      className="absolute right-full mr-3 top-0 w-[272px] min-h-[228px] animate-slide-in-left"
+      className={cn(
+        "absolute right-full mr-2 top-0",
+        "rounded-xl shadow-elevated",
+        "w-[250px] h-[250px]",
+        "animate-slide-in-left p-4 box-border",
+        "relative overflow-hidden border border-white/10"
+      )}
       onClick={(e) => e.stopPropagation()}
     >
-      <div className="relative min-h-[228px] overflow-hidden rounded-[28px] border border-white/15 shadow-[0_24px_60px_rgba(15,23,42,0.28)]">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `url(${backgroundImage})`,
-            backgroundPosition: 'center',
-            backgroundSize: 'cover',
-            filter: 'blur(22px) saturate(0.8) brightness(0.78)',
-            transform: 'scale(1.12)',
-          }}
-        />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.16)_0%,rgba(255,255,255,0.08)_24%,rgba(14,18,28,0.42)_58%,rgba(8,10,16,0.74)_100%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.24),transparent_54%)]" />
-        <div className="absolute inset-[1px] rounded-[27px] border border-white/10" />
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundPosition: 'center',
+          backgroundSize: 'cover',
+          filter: 'blur(18px) saturate(0.82) brightness(0.68)',
+          transform: 'scale(1.14)',
+        }}
+      />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.14)_0%,rgba(255,255,255,0.06)_20%,rgba(18,24,38,0.34)_55%,rgba(8,10,16,0.6)_100%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.18),transparent_56%)]" />
+      <div className="absolute inset-[1px] rounded-[11px] border border-white/8" />
 
-        <div className="relative flex min-h-[228px] flex-col justify-between p-5">
-          <div className="h-[30px]" aria-hidden="true" />
-
-          {isLoading ? (
-            <div className="flex items-center gap-3 text-white/80" role="status" aria-live="polite">
-              <div
-                className="h-4 w-4 rounded-full border border-white/35 border-t-white"
-                style={{ animation: 'spin 0.8s linear infinite' }}
-              />
-              <p
-                className="text-sm font-medium tracking-[-0.01em]"
-                style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif" }}
-              >
-                Analyzing image
-              </p>
-            </div>
-          ) : hasDescription ? (
-            <p
-              className="max-w-[14ch] text-left text-[30px] font-black italic leading-[1.12] text-white"
-              style={{
-                fontFamily: "'Playfair Display', 'DM Serif Display', Georgia, serif",
-                textShadow: '0 8px 30px rgba(0,0,0,0.35)',
-              }}
-            >
-              {description}
-            </p>
-          ) : (
-            <p
-              className="max-w-[18ch] text-left text-sm font-medium leading-6 text-white/76"
-              style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif" }}
-            >
-              AI description will appear here.
-            </p>
-          )}
-        </div>
+      <div className="relative z-10 flex items-center justify-end mb-2">
+        {/* Close button is hidden per design */}
       </div>
+
+      {isLoading ? (
+        <div className="relative z-10 flex items-center gap-2 py-3">
+          <div
+            className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+            style={{ animation: 'spin 0.8s linear infinite' }}
+          />
+        </div>
+      ) : description ? (
+        <div
+          className="relative z-10 bg-transparent rounded-lg p-3 h-full overflow-hidden box-border flex items-center justify-center"
+          style={{
+            wordWrap: 'break-word',
+            overflowWrap: 'break-word'
+          }}
+        >
+          <p
+            className="leading-[1.3] text-white italic"
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: '30px',
+              fontWeight: 900
+            }}
+          >
+            {description}
+          </p>
+        </div>
+      ) : null}
     </div>
   );
 };
