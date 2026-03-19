@@ -26,38 +26,28 @@ const DescriptionPanel = ({
         "animate-slide-in-left box-border"
       )}
       style={{
-        background: 'rgba(32, 24, 20, 0.32)',
-        boxShadow: '0 18px 42px rgba(0, 0, 0, 0.22)',
+        background: 'rgba(255, 255, 255, 0.08)',
       }}
       onClick={(e) => e.stopPropagation()}
     >
       <div
         aria-hidden="true"
-        className="absolute inset-[-36px]"
+        className="absolute inset-[-20px]"
         style={{
           backgroundImage: `url(${imageUrl})`,
           backgroundPosition: 'center',
           backgroundSize: 'cover',
-          filter: 'blur(40px) saturate(0.9) brightness(0.72)',
-          transform: 'scale(1.16)',
-          opacity: 0.5,
+          filter: 'blur(16px) saturate(1.05) brightness(0.82)',
+          transform: 'scale(1.06)',
+          opacity: 0.95,
         }}
       />
       <div
         aria-hidden="true"
         className="absolute inset-0"
         style={{
-          background: 'linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.06) 32%, rgba(22,18,16,0.26) 100%)',
-          backdropFilter: 'blur(18px) saturate(1.2)',
-          WebkitBackdropFilter: 'blur(18px) saturate(1.2)',
-          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -24px 48px rgba(0,0,0,0.12)',
-        }}
-      />
-      <div
-        aria-hidden="true"
-        className="absolute inset-0"
-        style={{
-          background: 'radial-gradient(circle at top left, rgba(255,255,255,0.12), transparent 42%), linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0))',
+          background: 'linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(18,18,18,0.20) 100%)',
+          boxShadow: 'inset 0 0 60px rgba(0,0,0,0.08)',
         }}
       />
 
