@@ -26,7 +26,8 @@ const DescriptionPanel = ({
         "animate-slide-in-left box-border"
       )}
       style={{
-        background: 'rgba(255, 255, 255, 0.08)',
+        background: '#1b140f',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
       }}
       onClick={(e) => e.stopPropagation()}
     >
@@ -39,15 +40,15 @@ const DescriptionPanel = ({
           backgroundSize: 'cover',
           filter: 'blur(16px) saturate(1.05) brightness(0.82)',
           transform: 'scale(1.06)',
-          opacity: 0.95,
+          opacity: 1,
         }}
       />
       <div
         aria-hidden="true"
         className="absolute inset-0"
         style={{
-          background: 'linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(18,18,18,0.20) 100%)',
-          boxShadow: 'inset 0 0 60px rgba(0,0,0,0.08)',
+          background: 'linear-gradient(180deg, rgba(30, 24, 18, 0.32) 0%, rgba(21, 14, 10, 0.82) 100%)',
+          boxShadow: 'inset 0 0 60px rgba(0,0,0,0.2)',
         }}
       />
 
