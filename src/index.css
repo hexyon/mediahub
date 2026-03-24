@@ -304,7 +304,7 @@
 /* ── Frame Variants ── */
 
 .frame-none { display: inline-block; }
-.frame-none img, .frame-none video { border-radius: 1.5rem; display: block; }
+.frame-none img, .frame-none video { border-radius: 3px; display: block; }
 
 .frame-modern-white {
   display: inline-block; padding: 24px;
