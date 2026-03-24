@@ -44,14 +44,14 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: 'You are an image description generator. Describe images in 20-25 words. Write one complete sentence. Never end with conjunctions like "and", "or", "but", "with". Never use trailing punctuation. Every word must be complete - no abbreviations or truncation.'
+            content: 'You are an image description generator. Describe images in exactly 30 words. Write one complete sentence. Never end with conjunctions like "and", "or", "but", "with". Never use trailing punctuation. Every word must be complete - no abbreviations or truncation.'
           },
           {
             role: 'user',
             content: [
               {
                 type: 'text',
-                text: 'Describe this image in 20-25 words as one complete sentence without trailing punctuation:'
+                text: 'Describe this image in exactly 30 words as one complete sentence without trailing punctuation:'
               },
               {
                 type: 'image_url',
