@@ -70,9 +70,9 @@ const DescriptionPanel = ({
           <p
             className="leading-[1.3] text-white italic"
             style={{
-              fontFamily: "'Geist', sans-serif",
+              fontFamily: "'Neue Montreal', sans-serif",
               fontSize: '30px',
-              fontWeight: 900
+              fontWeight: 300
             }}
           >
             {description}
