@@ -22,7 +22,7 @@ const DescriptionPanel = ({
       className={cn(
         "absolute top-0 right-[calc(100%+8px)]",
         "isolate overflow-hidden rounded-xl shadow-elevated",
-        "w-[250px] h-[250px]",
+        "w-[500px] h-[500px]",
         "animate-slide-in-left box-border"
       )}
       style={{
