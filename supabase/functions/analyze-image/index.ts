@@ -40,17 +40,18 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         model: 'google/gemini-2.5-flash',
+        max_tokens: 512,
         messages: [
           {
             role: 'system',
-            content: 'You are an image description generator. Analyze the image and provide a very short, concise description. Your response must be EXACTLY 50 characters or less. Be descriptive but extremely brief. Do not use quotes or punctuation at the end.'
+            content: 'You are an image description generator. Describe images in 20-25 words. Write one complete sentence. Never end with conjunctions like "and", "or", "but", "with". Never use trailing punctuation. Every word must be complete - no abbreviations or truncation.'
           },
           {
             role: 'user',
             content: [
               {
                 type: 'text',
-                text: 'Describe this image in 50 characters or less:'
+                text: 'Describe this image in 20-25 words as one complete sentence without trailing punctuation:'
               },
               {
                 type: 'image_url',
@@ -91,10 +92,12 @@ serve(async (req) => {
     const data = await response.json();
     let description = data.choices?.[0]?.message?.content || 'No description available';
     
-    // Ensure description is max 50 characters
-    if (description.length > 50) {
-      description = description.substring(0, 47) + '...';
-    }
+    // Remove quotes if wrapped
+    description = description.replace(/^["']|["']$/g, '').trim();
+    
+    // Remove trailing punctuation and dangling conjunctions
+    description = description.replace(/[.,!?;:]+$/, '').trim();
+    description = description.replace(/\s+(and|or|but|with|the|a|an|in|on|at|to|for|of)$/i, '').trim();
 
     console.log('Generated description:', description);
 
