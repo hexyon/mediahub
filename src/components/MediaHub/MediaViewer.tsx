@@ -1,10 +1,11 @@
-import { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { ArrowLeft, ArrowRight, List, Sparkles, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { MediaItem } from './types';
 import DescriptionPanel from './DescriptionPanel';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { FrameVariant, DesignStyle } from '../Settings/FrameVariants';
+import { DesignStyle, FrameVariant } from '../Settings/FrameVariants';
 
 interface MediaViewerProps {
   media: MediaItem[];
@@ -30,25 +31,24 @@ const MediaViewer = ({
   const [showList, setShowList] = useState(false);
   const [showDescription, setShowDescription] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisTimeout, setAnalysisTimeoutState] = useState<NodeJS.Timeout | null>(null);
+  const [analysisTimeout, setAnalysisTimeoutState] = useState<ReturnType<typeof setTimeout> | null>(null);
   const [currentBlurIndex, setCurrentBlurIndex] = useState(0);
   const [preloadedImages, setPreloadedImages] = useState<{ [key: number]: HTMLImageElement }>({});
-  const [hideLeftArrow, setHideLeftArrow] = useState(false);
-  const [hideRightArrow, setHideRightArrow] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const blur1Ref = useRef<HTMLDivElement>(null);
   const blur2Ref = useRef<HTMLDivElement>(null);
+  const currentIndexRef = useRef(currentIndex);
   const currentMedia = media[currentIndex];
+
+  useEffect(() => {
+    currentIndexRef.current = currentIndex;
+  }, [currentIndex]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight') {
-        setHideLeftArrow(true);
-        setHideRightArrow(false);
         onIndexChange((currentIndex + 1) % media.length);
       } else if (e.key === 'ArrowLeft') {
-        setHideRightArrow(true);
-        setHideLeftArrow(false);
         onIndexChange((currentIndex - 1 + media.length) % media.length);
       } else if (e.key === 'Escape') {
         onClose();
@@ -57,7 +57,7 @@ const MediaViewer = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentIndex, media.length, onIndexChange, onClose]);
+  }, [currentIndex, media.length, onClose, onIndexChange]);
 
   useEffect(() => {
     if (videoRef.current && currentMedia?.type === 'video') {
@@ -65,27 +65,21 @@ const MediaViewer = ({
     }
   }, [currentIndex, currentMedia]);
 
-  // Preload adjacent images for blur
   useEffect(() => {
     if (!blurEnabled) return;
 
-    const preloadAdjacentImages = () => {
-      const prevIndex = (currentIndex - 1 + media.length) % media.length;
-      const nextIndex = (currentIndex + 1) % media.length;
+    const prevIndex = (currentIndex - 1 + media.length) % media.length;
+    const nextIndex = (currentIndex + 1) % media.length;
 
-      [prevIndex, nextIndex].forEach(idx => {
-        if (media[idx]?.type === 'image' && !preloadedImages[idx]) {
-          const img = new Image();
-          img.src = media[idx].url;
-          setPreloadedImages(prev => ({ ...prev, [idx]: img }));
-        }
-      });
-    };
+    [prevIndex, nextIndex].forEach((idx) => {
+      if (media[idx]?.type === 'image' && !preloadedImages[idx]) {
+        const img = new Image();
+        img.src = media[idx].url;
+        setPreloadedImages((prev) => ({ ...prev, [idx]: img }));
+      }
+    });
+  }, [blurEnabled, currentIndex, media, preloadedImages]);
 
-    preloadAdjacentImages();
-  }, [currentIndex, blurEnabled, media, preloadedImages]);
-
-  // Update blur background
   useEffect(() => {
     if (!blurEnabled || !currentMedia) return;
 
@@ -93,66 +87,63 @@ const MediaViewer = ({
       const nextBlurIndex = 1 - currentBlurIndex;
       const blurRefs = [blur1Ref, blur2Ref];
       const nextBlur = blurRefs[nextBlurIndex].current;
-      const currentBlur = blurRefs[currentBlurIndex].current;
+      const activeBlur = blurRefs[currentBlurIndex].current;
 
       if (nextBlur) {
         nextBlur.style.backgroundImage = `url(${currentMedia.url})`;
         nextBlur.style.display = 'block';
-        nextBlur.style.opacity = '0.9';
+        nextBlur.style.opacity = '0.8';
       }
 
-      if (currentBlur) {
-        currentBlur.style.opacity = '0';
+      if (activeBlur) {
+        activeBlur.style.opacity = '0';
       }
 
       setCurrentBlurIndex(nextBlurIndex);
-    } else if (currentMedia.type === 'video') {
-      [blur1Ref, blur2Ref].forEach(ref => {
+    } else {
+      [blur1Ref, blur2Ref].forEach((ref) => {
         if (ref.current) {
           ref.current.style.display = 'block';
           ref.current.style.opacity = '0';
         }
       });
     }
-  }, [currentIndex, currentMedia, blurEnabled]);
+  }, [blurEnabled, currentMedia]);
 
-  // Auto-analyze image when description panel opens
   useEffect(() => {
-    // Clear any existing timeout
     if (analysisTimeout) {
       clearTimeout(analysisTimeout);
       setAnalysisTimeoutState(null);
     }
 
     if (showDescription && currentMedia?.type === 'image' && !currentMedia.description && !isAnalyzing) {
-      // Wait 3 seconds before analyzing (debounce for quick browsing)
       const timeout = setTimeout(() => {
-        analyzeCurrentImage();
+        void analyzeCurrentImage();
       }, 3000);
+
       setAnalysisTimeoutState(timeout);
+
+      return () => clearTimeout(timeout);
     }
 
-    return () => {
-      if (analysisTimeout) {
-        clearTimeout(analysisTimeout);
-      }
-    };
-  }, [showDescription, currentIndex, currentMedia]);
+    return undefined;
+  }, [currentIndex, currentMedia, isAnalyzing, showDescription]);
 
   const analyzeCurrentImage = async () => {
     if (!currentMedia || currentMedia.type !== 'image' || isAnalyzing) return;
 
+    const requestIndex = currentIndexRef.current;
+    const requestItem = media[requestIndex];
+    if (!requestItem || requestItem.type !== 'image') return;
+
     setIsAnalyzing(true);
-    const requestIndex = currentIndex;
 
     try {
       const { data, error } = await supabase.functions.invoke('analyze-image', {
-        body: { imageData: currentMedia.url }
+        body: { imageData: requestItem.url }
       });
 
-      // Only update if we're still on the same image
-      if (requestIndex !== currentIndex) {
-        console.log('Discarding outdated analysis result');
+      if (requestIndex !== currentIndexRef.current) {
         return;
       }
 
@@ -163,7 +154,7 @@ const MediaViewer = ({
       }
 
       if (data?.description) {
-        onUpdateDescription(currentMedia.id, data.description);
+        onUpdateDescription(requestItem.id, data.description);
       }
     } catch (err) {
       console.error('Error calling analyze-image:', err);
@@ -173,56 +164,69 @@ const MediaViewer = ({
     }
   };
 
-  const handleToggleDescription = () => {
-    setShowDescription(!showDescription);
-  };
-
   const goToPrev = () => {
-    setHideRightArrow(true);
-    setHideLeftArrow(false);
     onIndexChange((currentIndex - 1 + media.length) % media.length);
   };
 
   const goToNext = () => {
-    setHideLeftArrow(true);
-    setHideRightArrow(false);
     onIndexChange((currentIndex + 1) % media.length);
   };
 
   const isContentPlus = designStyle === 'contentplus';
+  const floatingButtonClass = cn(
+    "flex h-11 w-11 items-center justify-center rounded-full border backdrop-blur-xl transition-all duration-200",
+    isContentPlus
+      ? "border-white/10 bg-white/10 text-white/90 hover:bg-white/[0.16]"
+      : "border-black/10 bg-white/[0.72] text-[#17181c] hover:bg-white/[0.92]"
+  );
+  const floatingPillClass = cn(
+    "flex items-center gap-3 rounded-full border px-4 py-2 backdrop-blur-xl",
+    isContentPlus
+      ? "border-white/10 bg-white/10 text-white shadow-[0_16px_40px_rgba(0,0,0,0.2)]"
+      : "border-black/10 bg-white/[0.72] text-[#17181c] shadow-[0_16px_40px_rgba(15,23,42,0.1)]"
+  );
+  const metaLabelClass = cn(
+    "text-[0.68rem] font-semibold uppercase tracking-[0.22em]",
+    isContentPlus ? "text-white/[0.45]" : "text-[#6b6f76]"
+  );
+  const listPanelClass = cn(
+    "absolute right-4 top-[4.75rem] z-30 w-[min(24rem,calc(100vw-2rem))] overflow-hidden rounded-[28px] animate-scale-in sm:right-5",
+    isContentPlus ? "surface-panel-dark text-white" : "surface-panel text-[#17181c]"
+  );
 
   return (
-    <div className={cn(
-      "fixed inset-0 z-50 flex items-center justify-center",
-      isContentPlus ? "bg-[rgba(0,0,0,0.98)]" : "bg-[hsl(var(--blur-overlay))]"
-    )}>
-      {/* Blur backgrounds */}
+    <div
+      className={cn(
+        "fixed inset-0 z-50 flex items-center justify-center overflow-hidden",
+        isContentPlus ? "bg-[rgba(8,10,13,0.96)]" : "bg-[hsl(var(--blur-overlay))] backdrop-blur-xl"
+      )}
+    >
       {blurEnabled && (
         <>
           <div
             ref={blur1Ref}
-            className="absolute top-1/2 left-1/2 w-[120%] h-[120%] -translate-x-1/2 -translate-y-1/2 scale-[1.2] -z-10"
+            className="absolute left-1/2 top-1/2 h-[130%] w-[130%] -translate-x-1/2 -translate-y-1/2 scale-[1.18] -z-10"
             style={{
               display: 'none',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
-              filter: 'blur(25px) brightness(0.85)',
+              filter: 'blur(42px) saturate(0.92) brightness(0.82)',
               opacity: 0,
-              transition: 'opacity 0.15s ease-out',
+              transition: 'opacity 0.18s ease-out',
               willChange: 'background-image, opacity',
               backgroundColor: '#000'
             }}
           />
           <div
             ref={blur2Ref}
-            className="absolute top-1/2 left-1/2 w-[120%] h-[120%] -translate-x-1/2 -translate-y-1/2 scale-[1.2] -z-10"
+            className="absolute left-1/2 top-1/2 h-[130%] w-[130%] -translate-x-1/2 -translate-y-1/2 scale-[1.18] -z-10"
             style={{
               display: 'none',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
-              filter: 'blur(25px) brightness(0.85)',
+              filter: 'blur(42px) saturate(0.92) brightness(0.82)',
               opacity: 0,
-              transition: 'opacity 0.15s ease-out',
+              transition: 'opacity 0.18s ease-out',
               willChange: 'background-image, opacity',
               backgroundColor: '#000'
             }}
@@ -230,235 +234,177 @@ const MediaViewer = ({
         </>
       )}
 
-      {/* Exit button - hidden in ContentPlus mode */}
-      {!isContentPlus && (
+      <div className="absolute left-4 top-4 z-30 sm:left-5 sm:top-5">
         <button
+          type="button"
           onClick={onClose}
-          className="absolute top-5 left-5 w-[50px] h-[50px] z-10"
-          style={{
-            background: "url('/exit.png') no-repeat",
-            backgroundSize: 'contain',
-            border: 'none',
-            outline: 'none'
-          }}
-        />
-      )}
+          className={floatingButtonClass}
+          aria-label="Close viewer"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      </div>
 
-      {/* Index indicator with description panel - hidden in ContentPlus mode */}
-      {!isContentPlus && (
-        <div className="absolute top-5 right-5 flex items-center z-10">
-          <div className="relative flex items-center">
+      <div className="absolute right-4 top-4 z-30 flex items-center gap-2 sm:right-5 sm:top-5">
+        {currentMedia?.type === 'image' && (
+          <div className="relative">
             <DescriptionPanel
               isOpen={showDescription}
-              description={currentMedia?.description || ''}
-              imageUrl={currentMedia?.url || ''}
+              description={currentMedia.description || ''}
+              imageUrl={currentMedia.url}
               isLoading={isAnalyzing}
               onClose={() => setShowDescription(false)}
             />
-            {currentMedia?.type === 'image' && (
-              <button
-                onClick={handleToggleDescription}
-                className={cn(
-                  "w-8 h-8 mr-2 flex items-center justify-center cursor-pointer",
-                  "border-[1.5px] border-black"
-                )}
-                style={{
-                  borderRadius: 0,
-                  background: showDescription ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.9)',
-                  backdropFilter: 'blur(10px)',
-                  WebkitBackdropFilter: 'blur(10px)',
-                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-                  fontFamily: "'Times New Roman', serif",
-                  fontSize: '16px',
-                  fontStyle: 'italic',
-                  fontWeight: 'normal',
-                  color: '#000'
-                }}
-                title="AI Description"
-              >
-                i
-              </button>
-            )}
             <button
-              onClick={() => setShowList(!showList)}
-              className="film-counter cursor-pointer"
-              style={{ outline: 'none' }}
+              type="button"
+              onClick={() => setShowDescription(!showDescription)}
+              className={floatingButtonClass}
+              aria-label="Toggle AI description"
+              aria-pressed={showDescription}
             >
-              {String(currentIndex + 1).padStart(2, '0')}
+              <Sparkles className="h-4 w-4" />
             </button>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Media list dropdown - hidden in ContentPlus mode */}
-      {!isContentPlus && showList && (
-        <div
-          className="absolute top-[72px] right-5 bg-white rounded-none shadow-elevated max-h-[60vh] overflow-y-auto animate-scale-in min-w-[220px] z-20"
-          style={{
-            scrollbarWidth: 'thin',
-            scrollbarColor: '#D1D1D6 transparent'
-          }}
+        <button
+          type="button"
+          onClick={() => setShowList(!showList)}
+          className={floatingButtonClass}
+          aria-label="Toggle media list"
+          aria-pressed={showList}
         >
-          <style>{`
-            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar {
-              width: 4px;
-            }
-            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar-track {
-              background: transparent;
-            }
-            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar-thumb {
-              background-color: #D1D1D6;
-              border-radius: 2px;
-            }
-            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar-thumb:hover {
-              background-color: #B5B5BD;
-            }
-          `}</style>
-          <div className="px-3 py-2 border-b border-[#E0E0E0] bg-[#F5F5F7]">
-            <span className="font-semibold text-sm text-[#111] italic">List</span>
+          <List className="h-4 w-4" />
+        </button>
+
+        <div className={floatingPillClass}>
+          <span className={metaLabelClass}>Item</span>
+          <span className="text-sm font-semibold">
+            {String(currentIndex + 1).padStart(2, '0')} / {String(media.length).padStart(2, '0')}
+          </span>
+        </div>
+      </div>
+
+      {showList && (
+        <div className={listPanelClass}>
+          <div className={cn(
+            "flex items-center justify-between border-b px-4 py-3",
+            isContentPlus ? "border-white/10" : "border-black/[0.08]"
+          )}>
+            <div>
+              <p className={metaLabelClass}>Queue</p>
+              <p className="mt-1 text-sm font-semibold">Media list</p>
+            </div>
+            <span className={cn("text-xs", isContentPlus ? "text-white/[0.55]" : "text-[#6b6f76]")}>
+              {media.length} items
+            </span>
           </div>
-          <ul className="py-0">
-            {media.map((item, index) => (
-              <li
-                key={item.id}
-                onClick={() => {
-                  onIndexChange(index);
-                  setShowList(false);
-                }}
-                className={cn(
-                  "flex items-center gap-2 px-3 py-2 cursor-pointer",
-                  "hover:bg-[#F5F5F7] transition-colors",
-                  "border-b border-[#E0E0E0]",
-                  index === currentIndex 
-                    ? "!border-t-2 !border-t-black !border-b-2 !border-b-black" 
-                    : index === media.length - 1 && "!border-b-0",
-                  (index === 0 || index === media.length - 1) && "bg-[#FAFAFA]"
-                )}
-              >
-                <span className="font-semibold text-sm text-[#111]">
-                  {item.type === 'video' ? 'Video' : 'Image'}
-                </span>
-                <span className="text-[#111] text-sm">{index + 1}.</span>
-                <span className="text-sm truncate flex-1 text-[#111]">{item.name}</span>
-              </li>
-            ))}
+
+          <ul className="max-h-[60vh] overflow-y-auto p-2">
+            {media.map((item, index) => {
+              const isActive = index === currentIndex;
+              return (
+                <li key={item.id}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onIndexChange(index);
+                      setShowList(false);
+                    }}
+                    className={cn(
+                      "flex w-full items-center gap-3 rounded-[20px] px-3 py-3 text-left transition-colors",
+                      isContentPlus
+                        ? isActive
+                          ? "bg-white/[0.12]"
+                          : "hover:bg-white/[0.08]"
+                        : isActive
+                          ? "bg-black/[0.06]"
+                          : "hover:bg-black/[0.04]"
+                    )}
+                  >
+                    <div className={cn(
+                      "flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border text-[0.68rem] font-semibold uppercase tracking-[0.16em]",
+                      isContentPlus
+                        ? isActive
+                          ? "border-white/[0.18] bg-white/10 text-white"
+                          : "border-white/10 bg-white/5 text-white/70"
+                        : isActive
+                          ? "border-black/10 bg-black/[0.06] text-[#17181c]"
+                          : "border-black/[0.08] bg-white/[0.55] text-[#6b6f76]"
+                    )}>
+                      {item.type === 'video' ? 'VID' : 'IMG'}
+                    </div>
+
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-semibold">{item.name}</p>
+                      <p className={cn("mt-1 text-xs", isContentPlus ? "text-white/[0.55]" : "text-[#6b6f76]")}>
+                        {item.type === 'video' ? 'Video file' : 'Image file'}
+                      </p>
+                    </div>
+
+                    <span className={cn("text-xs font-medium", isContentPlus ? "text-white/[0.55]" : "text-[#6b6f76]")}>
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
           </ul>
-          <div className="px-3 py-2 border-t border-[#E0E0E0] bg-[#F5F5F7]">
-            <span className="text-xs text-gray-500 font-medium italic">Total: {media.length}</span>
-          </div>
         </div>
       )}
 
-      {/* Navigation arrows */}
       {media.length > 1 && (
         <>
           <button
+            type="button"
             onClick={goToPrev}
-            onMouseEnter={() => setHideLeftArrow(false)}
-            className={cn(
-              "absolute left-6 z-10 transition-all duration-200",
-              hideLeftArrow && "opacity-0",
-            )}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              outline: 'none',
-              fontFamily: "'Georgia', 'Times New Roman', serif",
-              fontSize: '2rem',
-              color: isContentPlus ? 'rgba(255,255,255,0.85)' : '#2a1f0f',
-              lineHeight: 1,
-              padding: '4px 8px',
-              borderBottom: isContentPlus ? '1px solid rgba(255,255,255,0.3)' : '1px solid transparent',
-              opacity: isContentPlus ? 0.7 : 0.75,
-              cursor: 'pointer',
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.opacity = '1';
-              e.currentTarget.style.borderBottom = isContentPlus ? '1px solid rgba(255,255,255,0.6)' : '1px solid #C8922A';
-              e.currentTarget.style.color = isContentPlus ? '#fff' : '#C8922A';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.opacity = isContentPlus ? '0.7' : '0.75';
-              e.currentTarget.style.borderBottom = isContentPlus ? '1px solid rgba(255,255,255,0.3)' : '1px solid transparent';
-              e.currentTarget.style.color = isContentPlus ? 'rgba(255,255,255,0.85)' : '#2a1f0f';
-            }}
+            className={cn("absolute left-4 top-1/2 z-20 -translate-y-1/2 sm:left-6 sm:h-14 sm:w-14", floatingButtonClass)}
+            aria-label="Previous media"
           >
-            &#8592;
+            <ArrowLeft className="h-4 w-4" />
           </button>
+
           <button
+            type="button"
             onClick={goToNext}
-            onMouseEnter={() => setHideRightArrow(false)}
-            className={cn(
-              "absolute right-6 z-10 transition-all duration-200",
-              hideRightArrow && "opacity-0",
-            )}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              outline: 'none',
-              fontFamily: "'Georgia', 'Times New Roman', serif",
-              fontSize: '2rem',
-              color: isContentPlus ? 'rgba(255,255,255,0.85)' : '#2a1f0f',
-              lineHeight: 1,
-              padding: '4px 8px',
-              borderBottom: isContentPlus ? '1px solid rgba(255,255,255,0.3)' : '1px solid transparent',
-              opacity: isContentPlus ? 0.7 : 0.75,
-              cursor: 'pointer',
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.opacity = '1';
-              e.currentTarget.style.borderBottom = isContentPlus ? '1px solid rgba(255,255,255,0.6)' : '1px solid #C8922A';
-              e.currentTarget.style.color = isContentPlus ? '#fff' : '#C8922A';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.opacity = isContentPlus ? '0.7' : '0.75';
-              e.currentTarget.style.borderBottom = isContentPlus ? '1px solid rgba(255,255,255,0.3)' : '1px solid transparent';
-              e.currentTarget.style.color = isContentPlus ? 'rgba(255,255,255,0.85)' : '#2a1f0f';
-            }}
+            className={cn("absolute right-4 top-1/2 z-20 -translate-y-1/2 sm:right-6 sm:h-14 sm:w-14", floatingButtonClass)}
+            aria-label="Next media"
           >
-            &#8594;
+            <ArrowRight className="h-4 w-4" />
           </button>
         </>
       )}
 
-      {/* Media display with frame variants */}
-      <div className="relative z-[1] animate-fade-in flex items-center justify-center">
+      <div className="relative z-10 flex w-full items-center justify-center px-14 sm:px-24">
         {currentMedia?.type === 'image' ? (
-          <div className={cn(
-            "relative inline-block",
-            !isContentPlus && `frame-${frameVariant}`
-          )}>
+          <div className={cn("relative inline-block animate-fade-in", !isContentPlus && `frame-${frameVariant}`)}>
             <img
               src={currentMedia.url}
               alt={currentMedia.name}
               className={cn(
-                "block w-auto h-auto object-contain",
-                isContentPlus ? "max-w-[90vw] max-h-[90vh] rounded-xl shadow-[0_24px_48px_rgba(0,0,0,0.4)]" : "max-w-[90vw] max-h-[90vh]"
+                "max-h-[82vh] max-w-[92vw] object-contain",
+                isContentPlus ? "rounded-[28px] shadow-[0_28px_80px_rgba(0,0,0,0.38)]" : ""
               )}
             />
           </div>
         ) : currentMedia?.type === 'video' ? (
-          <div className={cn(
-            "relative inline-block",
-            !isContentPlus && `frame-${frameVariant}`
-          )}>
+          <div className={cn("relative inline-block animate-fade-in", !isContentPlus && `frame-${frameVariant}`)}>
             <video
               ref={videoRef}
               src={currentMedia.url}
               controls
               className={cn(
-                "block w-auto h-auto",
-                isContentPlus ? "max-w-[90vw] max-h-[90vh] rounded-xl shadow-[0_24px_48px_rgba(0,0,0,0.4)]" : "max-w-[90vw] max-h-[90vh]"
+                "max-h-[82vh] max-w-[92vw]",
+                isContentPlus ? "rounded-[28px] shadow-[0_28px_80px_rgba(0,0,0,0.38)]" : ""
               )}
             />
           </div>
         ) : null}
       </div>
 
-      {/* Click outside to close list or close viewer in ContentPlus mode */}
       {(showList || isContentPlus) && (
         <div
-          className="fixed inset-0 z-[1]"
+          className="fixed inset-0 z-[5]"
           onClick={() => {
             if (showList) {
               setShowList(false);
