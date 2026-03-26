@@ -21,46 +21,46 @@ export interface FrameStyle {
 export const frameVariants: FrameStyle[] = [
   {
     id: 'modern-white',
-    name: 'Porcelain',
-    description: 'Soft gallery white',
+    name: 'Modern White',
+    description: 'Clean contemporary look',
     cssClass: 'frame-modern-white'
   },
   {
     id: 'minimalist-black',
-    name: 'Ink',
-    description: 'Deep monochrome edge',
+    name: 'Minimalist Black',
+    description: 'Sleek and modern',
     cssClass: 'frame-minimalist-black'
   },
   {
     id: 'classic-black',
-    name: 'Graphite',
-    description: 'Dark studio surround',
+    name: 'Classic Black',
+    description: 'Bold black frame',
     cssClass: 'frame-classic-black'
   },
   {
     id: 'vibrant-red',
-    name: 'Oxblood',
-    description: 'Muted cinematic warmth',
+    name: 'Vibrant Red',
+    description: 'Eye-catching red frame',
     cssClass: 'frame-vibrant-red'
   },
   {
     id: 'rustic-barnwood',
-    name: 'Warm Grain',
-    description: 'Textured earth tones',
+    name: 'Rustic Barnwood',
+    description: 'Weathered country charm',
     cssClass: 'frame-rustic-barnwood',
     premium: true
   },
   {
     id: 'soft-pastel',
-    name: 'Blush',
-    description: 'Low-contrast softness',
+    name: 'Soft Pastel',
+    description: 'Gentle and dreamy',
     cssClass: 'frame-soft-pastel',
     premium: true
   },
   {
     id: 'polaroid-style',
-    name: 'Paper',
-    description: 'Quiet archival border',
+    name: 'Polaroid Style',
+    description: 'Instant photo charm',
     cssClass: 'frame-polaroid-style'
   }
 ];
