@@ -72,7 +72,8 @@ const DescriptionPanel = ({
             style={{
               fontFamily: "'Neue Montreal', sans-serif",
               fontSize: '30px',
-              fontWeight: 300
+              fontWeight: 500,
+              textShadow: '0 1px 4px rgba(0,0,0,0.5), 0 2px 10px rgba(0,0,0,0.3)',
             }}
           >
             {description}
