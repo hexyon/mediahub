@@ -65,7 +65,6 @@ const MediaViewer = ({
     }
   }, [currentIndex, currentMedia]);
 
-  // Preload adjacent images for blur
   useEffect(() => {
     if (!blurEnabled) return;
 
@@ -85,7 +84,6 @@ const MediaViewer = ({
     preloadAdjacentImages();
   }, [currentIndex, blurEnabled, media, preloadedImages]);
 
-  // Update blur background
   useEffect(() => {
     if (!blurEnabled || !currentMedia) return;
 
@@ -100,11 +98,9 @@ const MediaViewer = ({
         nextBlur.style.display = 'block';
         nextBlur.style.opacity = '0.9';
       }
-
       if (currentBlur) {
         currentBlur.style.opacity = '0';
       }
-
       setCurrentBlurIndex(nextBlurIndex);
     } else if (currentMedia.type === 'video') {
       [blur1Ref, blur2Ref].forEach(ref => {
@@ -116,16 +112,13 @@ const MediaViewer = ({
     }
   }, [currentIndex, currentMedia, blurEnabled]);
 
-  // Auto-analyze image when description panel opens
   useEffect(() => {
-    // Clear any existing timeout
     if (analysisTimeout) {
       clearTimeout(analysisTimeout);
       setAnalysisTimeoutState(null);
     }
 
     if (showDescription && currentMedia?.type === 'image' && !currentMedia.description && !isAnalyzing) {
-      // Wait 3 seconds before analyzing (debounce for quick browsing)
       const timeout = setTimeout(() => {
         analyzeCurrentImage();
       }, 3000);
@@ -150,7 +143,6 @@ const MediaViewer = ({
         body: { imageData: currentMedia.url }
       });
 
-      // Only update if we're still on the same image
       if (requestIndex !== currentIndex) {
         console.log('Discarding outdated analysis result');
         return;
@@ -191,15 +183,14 @@ const MediaViewer = ({
 
   const isContentPlus = designStyle === 'contentplus';
 
-  // Arrow button style matching MediaHub (Updated) exactly:
-  // 44x44px white circle, backdrop blur, box shadow, CSS chevron via ::before
-  const arrowBtnStyle: React.CSSProperties = {
+  // Shared arrow button base style — matches MediaHub (Updated) circle exactly
+  const arrowBaseStyle: React.CSSProperties = {
     width: '44px',
     height: '44px',
-    background: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: '50%',
+    background: isContentPlus ? 'rgba(255,255,255,0.15)' : 'rgba(255, 255, 255, 0.9)',
     border: 'none',
     outline: 'none',
-    borderRadius: '50%',
     boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
     backdropFilter: 'blur(10px)',
     WebkitBackdropFilter: 'blur(10px)',
@@ -208,53 +199,50 @@ const MediaViewer = ({
     alignItems: 'center',
     justifyContent: 'center',
     transition: 'all 0.2s ease-in-out',
-    position: 'relative',
+    padding: 0,
   };
+
+  // SVG chevron — left pointing
+  const ChevronLeft = () => (
+    <svg
+      width="10" height="10" viewBox="0 0 10 10"
+      fill="none"
+      style={{ display: 'block', flexShrink: 0 }}
+    >
+      <path
+        d="M6.5 1.5 L2.5 5 L6.5 8.5"
+        stroke={isContentPlus ? '#fff' : '#000'}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity="0.8"
+      />
+    </svg>
+  );
+
+  // SVG chevron — right pointing
+  const ChevronRight = () => (
+    <svg
+      width="10" height="10" viewBox="0 0 10 10"
+      fill="none"
+      style={{ display: 'block', flexShrink: 0 }}
+    >
+      <path
+        d="M3.5 1.5 L7.5 5 L3.5 8.5"
+        stroke={isContentPlus ? '#fff' : '#000'}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity="0.8"
+      />
+    </svg>
+  );
 
   return (
     <div className={cn(
       "fixed inset-0 z-50 flex items-center justify-center",
       isContentPlus ? "bg-[rgba(0,0,0,0.98)]" : "bg-[hsl(var(--blur-overlay))]"
     )}>
-      {/* Arrow CSS — mirrors .arrow::before from the Updated version */}
-      <style>{`
-        .mediahub-arrow::before {
-          content: '';
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 10px;
-          height: 10px;
-          border: solid #000;
-          border-width: 2px 2px 0 0;
-          opacity: 0.8;
-        }
-        .mediahub-arrow-left::before {
-          transform: translate(-35%, -50%) rotate(-135deg);
-        }
-        .mediahub-arrow-right::before {
-          transform: translate(-65%, -50%) rotate(45deg);
-        }
-        .mediahub-arrow:hover {
-          background: rgba(255, 255, 255, 0.95) !important;
-          transform: scale(1.05);
-        }
-        .mediahub-arrow:active {
-          background: rgba(255, 255, 255, 1) !important;
-          transform: scale(0.95);
-        }
-        /* ContentPlus: invert to white chevron on dark circle */
-        .mediahub-arrow-contentplus {
-          background: rgba(255, 255, 255, 0.15) !important;
-        }
-        .mediahub-arrow-contentplus::before {
-          border-color: #fff !important;
-        }
-        .mediahub-arrow-contentplus:hover {
-          background: rgba(255, 255, 255, 0.25) !important;
-        }
-      `}</style>
-
       {/* Blur backgrounds */}
       {blurEnabled && (
         <>
@@ -289,7 +277,7 @@ const MediaViewer = ({
         </>
       )}
 
-      {/* Exit button - hidden in ContentPlus mode */}
+      {/* Exit button */}
       {!isContentPlus && (
         <button
           onClick={onClose}
@@ -303,7 +291,7 @@ const MediaViewer = ({
         />
       )}
 
-      {/* Index indicator with description panel - hidden in ContentPlus mode */}
+      {/* Index indicator with description panel */}
       {!isContentPlus && (
         <div className="absolute top-5 right-5 flex items-center z-10">
           <div className="relative flex items-center">
@@ -349,29 +337,17 @@ const MediaViewer = ({
         </div>
       )}
 
-      {/* Media list dropdown - hidden in ContentPlus mode */}
+      {/* Media list dropdown */}
       {!isContentPlus && showList && (
         <div
           className="absolute top-[72px] right-5 bg-white rounded-none shadow-elevated max-h-[60vh] overflow-y-auto animate-scale-in min-w-[220px] z-20"
-          style={{
-            scrollbarWidth: 'thin',
-            scrollbarColor: '#D1D1D6 transparent'
-          }}
+          style={{ scrollbarWidth: 'thin', scrollbarColor: '#D1D1D6 transparent' }}
         >
           <style>{`
-            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar {
-              width: 4px;
-            }
-            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar-track {
-              background: transparent;
-            }
-            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar-thumb {
-              background-color: #D1D1D6;
-              border-radius: 2px;
-            }
-            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar-thumb:hover {
-              background-color: #B5B5BD;
-            }
+            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar { width: 4px; }
+            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar-track { background: transparent; }
+            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar-thumb { background-color: #D1D1D6; border-radius: 2px; }
+            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar-thumb:hover { background-color: #B5B5BD; }
           `}</style>
           <div className="px-3 py-2 border-b border-[#E0E0E0] bg-[#F5F5F7]">
             <span className="font-semibold text-sm text-[#111] italic">List</span>
@@ -380,10 +356,7 @@ const MediaViewer = ({
             {media.map((item, index) => (
               <li
                 key={item.id}
-                onClick={() => {
-                  onIndexChange(index);
-                  setShowList(false);
-                }}
+                onClick={() => { onIndexChange(index); setShowList(false); }}
                 className={cn(
                   "flex items-center gap-2 px-3 py-2 cursor-pointer",
                   "hover:bg-[#F5F5F7] transition-colors",
@@ -394,9 +367,7 @@ const MediaViewer = ({
                   (index === 0 || index === media.length - 1) && "bg-[#FAFAFA]"
                 )}
               >
-                <span className="font-semibold text-sm text-[#111]">
-                  {item.type === 'video' ? 'Video' : 'Image'}
-                </span>
+                <span className="font-semibold text-sm text-[#111]">{item.type === 'video' ? 'Video' : 'Image'}</span>
                 <span className="text-[#111] text-sm">{index + 1}.</span>
                 <span className="text-sm truncate flex-1 text-[#111]">{item.name}</span>
               </li>
@@ -408,77 +379,88 @@ const MediaViewer = ({
         </div>
       )}
 
-      {/* Navigation arrows — exact design from MediaHub (Updated) */}
+      {/* Navigation arrows — white circle + SVG chevron, matching MediaHub (Updated) */}
       {media.length > 1 && (
         <>
           <button
             onClick={goToPrev}
             onMouseEnter={() => setHideLeftArrow(false)}
-            className={cn(
-              "mediahub-arrow mediahub-arrow-left absolute left-6 z-10 transition-all duration-200",
-              isContentPlus && "mediahub-arrow-contentplus",
-              hideLeftArrow && "opacity-0",
-            )}
-            style={arrowBtnStyle}
-          />
+            onMouseOver={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = isContentPlus ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.95)';
+              (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1.05)';
+            }}
+            onMouseOut={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = isContentPlus ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.9)';
+              (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1)';
+            }}
+            onMouseDown={(e) => { (e.currentTarget as HTMLButtonElement).style.transform = 'scale(0.95)'; }}
+            onMouseUp={(e) => { (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1.05)'; }}
+            className={cn("absolute left-6 z-10", hideLeftArrow && "opacity-0")}
+            style={arrowBaseStyle}
+          >
+            <ChevronLeft />
+          </button>
+
           <button
             onClick={goToNext}
             onMouseEnter={() => setHideRightArrow(false)}
-            className={cn(
-              "mediahub-arrow mediahub-arrow-right absolute right-6 z-10 transition-all duration-200",
-              isContentPlus && "mediahub-arrow-contentplus",
-              hideRightArrow && "opacity-0",
-            )}
-            style={arrowBtnStyle}
-          />
+            onMouseOver={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = isContentPlus ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.95)';
+              (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1.05)';
+            }}
+            onMouseOut={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = isContentPlus ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.9)';
+              (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1)';
+            }}
+            onMouseDown={(e) => { (e.currentTarget as HTMLButtonElement).style.transform = 'scale(0.95)'; }}
+            onMouseUp={(e) => { (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1.05)'; }}
+            className={cn("absolute right-6 z-10", hideRightArrow && "opacity-0")}
+            style={arrowBaseStyle}
+          >
+            <ChevronRight />
+          </button>
         </>
       )}
 
       {/* Media display with frame variants */}
       <div className="relative z-[1] animate-fade-in flex items-center justify-center">
         {currentMedia?.type === 'image' ? (
-          <div className={cn(
-            "relative inline-block",
-            !isContentPlus && `frame-${frameVariant}`
-          )}>
+          <div className={cn("relative inline-block", !isContentPlus && `frame-${frameVariant}`)}>
             <img
               src={currentMedia.url}
               alt={currentMedia.name}
               className={cn(
                 "block w-auto h-auto object-contain",
-                isContentPlus ? "max-w-[90vw] max-h-[90vh] rounded-xl shadow-[0_24px_48px_rgba(0,0,0,0.4)]" : "max-w-[90vw] max-h-[90vh]"
+                isContentPlus
+                  ? "max-w-[90vw] max-h-[90vh] rounded-xl shadow-[0_24px_48px_rgba(0,0,0,0.4)]"
+                  : "max-w-[90vw] max-h-[90vh]"
               )}
             />
           </div>
         ) : currentMedia?.type === 'video' ? (
-          <div className={cn(
-            "relative inline-block",
-            !isContentPlus && `frame-${frameVariant}`
-          )}>
+          <div className={cn("relative inline-block", !isContentPlus && `frame-${frameVariant}`)}>
             <video
               ref={videoRef}
               src={currentMedia.url}
               controls
               className={cn(
                 "block w-auto h-auto",
-                isContentPlus ? "max-w-[90vw] max-h-[90vh] rounded-xl shadow-[0_24px_48px_rgba(0,0,0,0.4)]" : "max-w-[90vw] max-h-[90vh]"
+                isContentPlus
+                  ? "max-w-[90vw] max-h-[90vh] rounded-xl shadow-[0_24px_48px_rgba(0,0,0,0.4)]"
+                  : "max-w-[90vw] max-h-[90vh]"
               )}
             />
           </div>
         ) : null}
       </div>
 
-      {/* Click outside to close list or close viewer in ContentPlus mode */}
+      {/* Click outside to close list or viewer in ContentPlus mode */}
       {(showList || isContentPlus) && (
         <div
           className="fixed inset-0 z-[1]"
           onClick={() => {
-            if (showList) {
-              setShowList(false);
-            }
-            if (isContentPlus) {
-              onClose();
-            }
+            if (showList) setShowList(false);
+            if (isContentPlus) onClose();
           }}
         />
       )}
