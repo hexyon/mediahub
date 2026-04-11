@@ -191,11 +191,70 @@ const MediaViewer = ({
 
   const isContentPlus = designStyle === 'contentplus';
 
+  // Arrow button style matching MediaHub (Updated) exactly:
+  // 44x44px white circle, backdrop blur, box shadow, CSS chevron via ::before
+  const arrowBtnStyle: React.CSSProperties = {
+    width: '44px',
+    height: '44px',
+    background: 'rgba(255, 255, 255, 0.9)',
+    border: 'none',
+    outline: 'none',
+    borderRadius: '50%',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+    backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'all 0.2s ease-in-out',
+    position: 'relative',
+  };
+
   return (
     <div className={cn(
       "fixed inset-0 z-50 flex items-center justify-center",
       isContentPlus ? "bg-[rgba(0,0,0,0.98)]" : "bg-[hsl(var(--blur-overlay))]"
     )}>
+      {/* Arrow CSS — mirrors .arrow::before from the Updated version */}
+      <style>{`
+        .mediahub-arrow::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 10px;
+          height: 10px;
+          border: solid #000;
+          border-width: 2px 2px 0 0;
+          opacity: 0.8;
+        }
+        .mediahub-arrow-left::before {
+          transform: translate(-35%, -50%) rotate(-135deg);
+        }
+        .mediahub-arrow-right::before {
+          transform: translate(-65%, -50%) rotate(45deg);
+        }
+        .mediahub-arrow:hover {
+          background: rgba(255, 255, 255, 0.95) !important;
+          transform: scale(1.05);
+        }
+        .mediahub-arrow:active {
+          background: rgba(255, 255, 255, 1) !important;
+          transform: scale(0.95);
+        }
+        /* ContentPlus: invert to white chevron on dark circle */
+        .mediahub-arrow-contentplus {
+          background: rgba(255, 255, 255, 0.15) !important;
+        }
+        .mediahub-arrow-contentplus::before {
+          border-color: #fff !important;
+        }
+        .mediahub-arrow-contentplus:hover {
+          background: rgba(255, 255, 255, 0.25) !important;
+        }
+      `}</style>
+
       {/* Blur backgrounds */}
       {blurEnabled && (
         <>
@@ -329,8 +388,8 @@ const MediaViewer = ({
                   "flex items-center gap-2 px-3 py-2 cursor-pointer",
                   "hover:bg-[#F5F5F7] transition-colors",
                   "border-b border-[#E0E0E0]",
-                  index === currentIndex 
-                    ? "!border-t-2 !border-t-black !border-b-2 !border-b-black" 
+                  index === currentIndex
+                    ? "!border-t-2 !border-t-black !border-b-2 !border-b-black"
                     : index === media.length - 1 && "!border-b-0",
                   (index === 0 || index === media.length - 1) && "bg-[#FAFAFA]"
                 )}
@@ -349,75 +408,29 @@ const MediaViewer = ({
         </div>
       )}
 
-      {/* Navigation arrows */}
+      {/* Navigation arrows — exact design from MediaHub (Updated) */}
       {media.length > 1 && (
         <>
           <button
             onClick={goToPrev}
             onMouseEnter={() => setHideLeftArrow(false)}
             className={cn(
-              "absolute left-6 z-10 transition-all duration-200",
+              "mediahub-arrow mediahub-arrow-left absolute left-6 z-10 transition-all duration-200",
+              isContentPlus && "mediahub-arrow-contentplus",
               hideLeftArrow && "opacity-0",
             )}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              outline: 'none',
-              fontFamily: "'Georgia', 'Times New Roman', serif",
-              fontSize: '2rem',
-              color: isContentPlus ? 'rgba(255,255,255,0.85)' : '#2a1f0f',
-              lineHeight: 1,
-              padding: '4px 8px',
-              borderBottom: isContentPlus ? '1px solid rgba(255,255,255,0.3)' : '1px solid transparent',
-              opacity: isContentPlus ? 0.7 : 0.75,
-              cursor: 'pointer',
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.opacity = '1';
-              e.currentTarget.style.borderBottom = isContentPlus ? '1px solid rgba(255,255,255,0.6)' : '1px solid #C8922A';
-              e.currentTarget.style.color = isContentPlus ? '#fff' : '#C8922A';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.opacity = isContentPlus ? '0.7' : '0.75';
-              e.currentTarget.style.borderBottom = isContentPlus ? '1px solid rgba(255,255,255,0.3)' : '1px solid transparent';
-              e.currentTarget.style.color = isContentPlus ? 'rgba(255,255,255,0.85)' : '#2a1f0f';
-            }}
-          >
-            &#8592;
-          </button>
+            style={arrowBtnStyle}
+          />
           <button
             onClick={goToNext}
             onMouseEnter={() => setHideRightArrow(false)}
             className={cn(
-              "absolute right-6 z-10 transition-all duration-200",
+              "mediahub-arrow mediahub-arrow-right absolute right-6 z-10 transition-all duration-200",
+              isContentPlus && "mediahub-arrow-contentplus",
               hideRightArrow && "opacity-0",
             )}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              outline: 'none',
-              fontFamily: "'Georgia', 'Times New Roman', serif",
-              fontSize: '2rem',
-              color: isContentPlus ? 'rgba(255,255,255,0.85)' : '#2a1f0f',
-              lineHeight: 1,
-              padding: '4px 8px',
-              borderBottom: isContentPlus ? '1px solid rgba(255,255,255,0.3)' : '1px solid transparent',
-              opacity: isContentPlus ? 0.7 : 0.75,
-              cursor: 'pointer',
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.opacity = '1';
-              e.currentTarget.style.borderBottom = isContentPlus ? '1px solid rgba(255,255,255,0.6)' : '1px solid #C8922A';
-              e.currentTarget.style.color = isContentPlus ? '#fff' : '#C8922A';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.opacity = isContentPlus ? '0.7' : '0.75';
-              e.currentTarget.style.borderBottom = isContentPlus ? '1px solid rgba(255,255,255,0.3)' : '1px solid transparent';
-              e.currentTarget.style.color = isContentPlus ? 'rgba(255,255,255,0.85)' : '#2a1f0f';
-            }}
-          >
-            &#8594;
-          </button>
+            style={arrowBtnStyle}
+          />
         </>
       )}
 
