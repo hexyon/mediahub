@@ -183,60 +183,7 @@ const MediaViewer = ({
 
   const isContentPlus = designStyle === 'contentplus';
 
-  // Shared arrow button base style — matches MediaHub (Updated) circle exactly
-  const arrowBaseStyle: React.CSSProperties = {
-    width: '44px',
-    height: '44px',
-    borderRadius: '50%',
-    background: isContentPlus ? 'rgba(255,255,255,0.15)' : 'rgba(255, 255, 255, 0.9)',
-    border: 'none',
-    outline: 'none',
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-    backdropFilter: 'blur(10px)',
-    WebkitBackdropFilter: 'blur(10px)',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transition: 'all 0.2s ease-in-out',
-    padding: 0,
-  };
 
-  // SVG chevron — left pointing
-  const ChevronLeft = () => (
-    <svg
-      width="10" height="10" viewBox="0 0 10 10"
-      fill="none"
-      style={{ display: 'block', flexShrink: 0 }}
-    >
-      <path
-        d="M6.5 1.5 L2.5 5 L6.5 8.5"
-        stroke={isContentPlus ? '#fff' : '#000'}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        opacity="0.8"
-      />
-    </svg>
-  );
-
-  // SVG chevron — right pointing
-  const ChevronRight = () => (
-    <svg
-      width="10" height="10" viewBox="0 0 10 10"
-      fill="none"
-      style={{ display: 'block', flexShrink: 0 }}
-    >
-      <path
-        d="M3.5 1.5 L7.5 5 L3.5 8.5"
-        stroke={isContentPlus ? '#fff' : '#000'}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        opacity="0.8"
-      />
-    </svg>
-  );
 
   return (
     <div className={cn(
@@ -379,45 +326,81 @@ const MediaViewer = ({
         </div>
       )}
 
-      {/* Navigation arrows — white circle + SVG chevron, matching MediaHub (Updated) */}
+      {/* Navigation arrows — glassmorphism wet design */}
       {media.length > 1 && (
         <>
           <button
             onClick={goToPrev}
             onMouseEnter={() => setHideLeftArrow(false)}
             onMouseOver={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = isContentPlus ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.95)';
+              (e.currentTarget as HTMLButtonElement).style.background = 'linear-gradient(135deg, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.25) 100%)';
               (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1.05)';
             }}
             onMouseOut={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = isContentPlus ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.9)';
+              (e.currentTarget as HTMLButtonElement).style.background = 'linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.15) 100%)';
               (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1)';
             }}
             onMouseDown={(e) => { (e.currentTarget as HTMLButtonElement).style.transform = 'scale(0.95)'; }}
             onMouseUp={(e) => { (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1.05)'; }}
             className={cn("absolute left-6 z-10", hideLeftArrow && "opacity-0")}
-            style={arrowBaseStyle}
+            style={{
+              width: '44px',
+              height: '44px',
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.15) 100%)',
+              border: '1px solid rgba(255,255,255,0.6)',
+              outline: 'none',
+              boxShadow: '0 4px 24px rgba(0,0,0,0.18), 0 1.5px 6px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.7)',
+              backdropFilter: 'blur(18px) saturate(1.8)',
+              WebkitBackdropFilter: 'blur(18px) saturate(1.8)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.2s ease-in-out',
+              padding: 0,
+            }}
           >
-            <ChevronLeft />
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M6.5 1.5 L2.5 5 L6.5 8.5" stroke="rgba(30,30,40,0.75)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </button>
 
           <button
             onClick={goToNext}
             onMouseEnter={() => setHideRightArrow(false)}
             onMouseOver={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = isContentPlus ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.95)';
+              (e.currentTarget as HTMLButtonElement).style.background = 'linear-gradient(135deg, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.25) 100%)';
               (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1.05)';
             }}
             onMouseOut={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = isContentPlus ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.9)';
+              (e.currentTarget as HTMLButtonElement).style.background = 'linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.15) 100%)';
               (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1)';
             }}
             onMouseDown={(e) => { (e.currentTarget as HTMLButtonElement).style.transform = 'scale(0.95)'; }}
             onMouseUp={(e) => { (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1.05)'; }}
             className={cn("absolute right-6 z-10", hideRightArrow && "opacity-0")}
-            style={arrowBaseStyle}
+            style={{
+              width: '44px',
+              height: '44px',
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.15) 100%)',
+              border: '1px solid rgba(255,255,255,0.6)',
+              outline: 'none',
+              boxShadow: '0 4px 24px rgba(0,0,0,0.18), 0 1.5px 6px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.7)',
+              backdropFilter: 'blur(18px) saturate(1.8)',
+              WebkitBackdropFilter: 'blur(18px) saturate(1.8)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.2s ease-in-out',
+              padding: 0,
+            }}
           >
-            <ChevronRight />
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M3.5 1.5 L7.5 5 L3.5 8.5" stroke="rgba(30,30,40,0.75)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </button>
         </>
       )}
