@@ -123,30 +123,33 @@ const MediaHub = () => {
             +
           </button>
 
-          {/* Blur toggle — text button with blur-behind effect when enabled */}
+          {/* Blur toggle — square retro-btn style, matching Add/Settings buttons */}
           <button
             onClick={() => setBlurEnabled(!blurEnabled)}
-            className={cn(
-              "w-[50px] h-[50px] rounded-full",
-              "flex items-center justify-center",
-              "transition-all duration-300"
-            )}
+            className="retro-btn w-[48px] h-[48px] flex items-center justify-center transition-transform duration-200"
             title="Toggle Background Blur"
             style={{
-              background: blurEnabled
-                ? 'linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.15) 100%)'
-                : 'transparent',
-              border: blurEnabled ? '1px solid rgba(255,255,255,0.4)' : '1px solid transparent',
-              boxShadow: blurEnabled ? '0 4px 24px rgba(0,0,0,0.18), 0 1.5px 6px rgba(0,0,0,0.10)' : 'none',
-              backdropFilter: blurEnabled ? 'blur(18px) saturate(1.8)' : 'none',
-              WebkitBackdropFilter: blurEnabled ? 'blur(18px) saturate(1.8)' : 'none',
-              fontSize: '0.78rem',
+              position: 'relative',
+              overflow: 'hidden',
+              fontSize: '0.7rem',
               fontWeight: 600,
               letterSpacing: '0.02em',
               color: blurEnabled ? '#1d1d1f' : '#888',
             }}
           >
-            Blur
+            {blurEnabled && (
+              <span
+                aria-hidden="true"
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  backdropFilter: 'blur(6px) saturate(1.6)',
+                  WebkitBackdropFilter: 'blur(6px) saturate(1.6)',
+                  background: 'rgba(255,255,255,0.35)',
+                }}
+              />
+            )}
+            <span style={{ position: 'relative' }}>Blur</span>
           </button>
 
           {/* Settings */}
