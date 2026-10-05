@@ -2,7 +2,8 @@ export type FrameVariant =
   | 'none'
   | 'modern-white'
   | 'minimalist-black'
-  | 'polaroid-style';
+  | 'polaroid-style'
+  | 'memento';
 
 export type DesignStyle = 'default' | 'contentplus';
 
@@ -15,6 +16,12 @@ export interface FrameStyle {
 }
 
 export const frameVariants: FrameStyle[] = [
+  {
+    id: 'memento',
+    name: 'Memento',
+    description: 'White print with image-colored splashes',
+    cssClass: 'frame-memento'
+  },
   {
     id: 'modern-white',
     name: 'Modern White',

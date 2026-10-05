@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { MediaItem } from './types';
 import DescriptionPanel from './DescriptionPanel';
+import MementoFrame from './MementoFrame';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { FrameVariant, DesignStyle } from '../Settings/FrameVariants';
@@ -407,7 +408,9 @@ const MediaViewer = ({
 
       {/* Media display with frame variants */}
       <div className="relative z-[1] animate-fade-in flex items-center justify-center">
-        {currentMedia?.type === 'image' ? (
+        {currentMedia && !isContentPlus && frameVariant === 'memento' ? (
+          <MementoFrame key={currentMedia.id} media={currentMedia} />
+        ) : currentMedia?.type === 'image' ? (
           <div className={cn("relative inline-block", !isContentPlus && `frame-${frameVariant}`)}>
             <img
               src={currentMedia.url}

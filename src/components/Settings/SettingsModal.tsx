@@ -104,7 +104,7 @@ const SettingsModal = ({ isOpen, onClose, currentFrame, onFrameChange, designSty
                     style={{ borderRadius: '8px', ...(isActive ? activeStyle : optionStyle) }}
                   >
                     <div className="mb-3 flex aspect-square items-center justify-center overflow-hidden" style={{ background: '#f5f5f7', borderRadius: '6px' }}>
-                      <div className={cn("h-3/4 w-3/4 bg-white", variant.cssClass)} />
+                      <div className={cn("h-3/4 w-3/4 bg-white", variant.cssClass, variant.id === 'memento' && 'memento-preview')} />
                     </div>
                     <h4 style={{ fontSize: '0.88rem', fontWeight: 600, color: '#1d1d1f', marginBottom: '3px' }}>
                       {variant.name}
