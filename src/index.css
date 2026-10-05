@@ -248,6 +248,25 @@
 
 /* ── Frame Variants ── */
 
+/* PhotoGallery (Final): the photo switches immediately while its backdrop blends. */
+.gallery-background-blur {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120%;
+  height: 120%;
+  z-index: 0;
+  pointer-events: none;
+  background-size: cover;
+  background-position: center;
+  filter: blur(25px) brightness(0.85);
+  transform: translate(-50%, -50%) scale(1.2);
+  transition: background-image 0.3s ease-out, opacity 0.3s ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .gallery-background-blur { transition: none; }
+}
+
 .frame-none { display: inline-block; }
 .frame-memento {
   position: relative;

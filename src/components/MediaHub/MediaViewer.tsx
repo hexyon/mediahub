@@ -32,13 +32,10 @@ const MediaViewer = ({
   const [showDescription, setShowDescription] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisTimeout, setAnalysisTimeoutState] = useState<NodeJS.Timeout | null>(null);
-  const [currentBlurIndex, setCurrentBlurIndex] = useState(0);
   const [preloadedImages, setPreloadedImages] = useState<{ [key: number]: HTMLImageElement }>({});
   const [hideLeftArrow, setHideLeftArrow] = useState(false);
   const [hideRightArrow, setHideRightArrow] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const blur1Ref = useRef<HTMLDivElement>(null);
-  const blur2Ref = useRef<HTMLDivElement>(null);
   const currentMedia = media[currentIndex];
 
   useEffect(() => {
@@ -84,34 +81,6 @@ const MediaViewer = ({
 
     preloadAdjacentImages();
   }, [currentIndex, blurEnabled, media, preloadedImages]);
-
-  useEffect(() => {
-    if (!blurEnabled || !currentMedia) return;
-
-    if (currentMedia.type === 'image') {
-      const nextBlurIndex = 1 - currentBlurIndex;
-      const blurRefs = [blur1Ref, blur2Ref];
-      const nextBlur = blurRefs[nextBlurIndex].current;
-      const currentBlur = blurRefs[currentBlurIndex].current;
-
-      if (nextBlur) {
-        nextBlur.style.backgroundImage = `url(${currentMedia.url})`;
-        nextBlur.style.display = 'block';
-        nextBlur.style.opacity = '0.9';
-      }
-      if (currentBlur) {
-        currentBlur.style.opacity = '0';
-      }
-      setCurrentBlurIndex(nextBlurIndex);
-    } else if (currentMedia.type === 'video') {
-      [blur1Ref, blur2Ref].forEach(ref => {
-        if (ref.current) {
-          ref.current.style.display = 'block';
-          ref.current.style.opacity = '0';
-        }
-      });
-    }
-  }, [currentIndex, currentMedia, blurEnabled]);
 
   useEffect(() => {
     if (analysisTimeout) {
@@ -188,41 +157,19 @@ const MediaViewer = ({
 
   return (
     <div className={cn(
-      "fixed inset-0 z-50 flex items-center justify-center",
+      "fixed inset-0 z-50 isolate overflow-hidden flex items-center justify-center",
       isContentPlus ? "bg-[rgba(0,0,0,0.98)]" : "bg-[hsl(var(--blur-overlay))]"
     )}>
-      {/* Blur backgrounds */}
+      {/* Match PhotoGallery's persistent background-image transition. */}
       {blurEnabled && (
-        <>
-          <div
-            ref={blur1Ref}
-            className="absolute top-1/2 left-1/2 w-[120%] h-[120%] -translate-x-1/2 -translate-y-1/2 scale-[1.2] -z-10"
-            style={{
-              display: 'none',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              filter: 'blur(25px) brightness(0.85)',
-              opacity: 0,
-              transition: 'opacity 0.15s ease-out',
-              willChange: 'background-image, opacity',
-              backgroundColor: '#000'
-            }}
-          />
-          <div
-            ref={blur2Ref}
-            className="absolute top-1/2 left-1/2 w-[120%] h-[120%] -translate-x-1/2 -translate-y-1/2 scale-[1.2] -z-10"
-            style={{
-              display: 'none',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              filter: 'blur(25px) brightness(0.85)',
-              opacity: 0,
-              transition: 'opacity 0.15s ease-out',
-              willChange: 'background-image, opacity',
-              backgroundColor: '#000'
-            }}
-          />
-        </>
+        <div
+          aria-hidden="true"
+          className="gallery-background-blur"
+          style={{
+            backgroundImage: currentMedia?.type === 'image' ? `url("${currentMedia.url}")` : 'none',
+            opacity: currentMedia?.type === 'image' ? 0.9 : 0,
+          }}
+        />
       )}
 
       {/* Exit button */}
