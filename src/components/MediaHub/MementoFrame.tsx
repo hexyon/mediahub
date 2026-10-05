@@ -196,7 +196,6 @@ export default function MementoFrame({ media }: { media: MediaItem }) {
       <figcaption className="memento-details">
         <div className="memento-name" title={media.name}>{media.name}</div>
         <div className="memento-metadata">{media.type === 'image' ? 'Image' : 'Video'}{dimensions && ` · ${dimensions.width} × ${dimensions.height} px`}</div>
-        {media.description && <p className="memento-description">{media.description}</p>}
       </figcaption>
     </figure>
     </div>
