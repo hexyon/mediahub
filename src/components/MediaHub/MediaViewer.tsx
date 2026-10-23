@@ -237,7 +237,7 @@ const MediaViewer = ({
             .absolute.top-\\[72px\\].right-5::-webkit-scrollbar-thumb { background-color: #D1D1D6; border-radius: 2px; }
             .absolute.top-\\[72px\\].right-5::-webkit-scrollbar-thumb:hover { background-color: #B5B5BD; }
           `}</style>
-          <div className="sticky top-0 z-10 px-4 pt-3.5 pb-3 bg-white" style={{ borderBottom: '1px solid #E8E8EC' }}>
+          <div className="sticky top-0 z-10 px-4 pt-3.5 pb-3 bg-white">
             <span
               style={{
                 fontFamily: "'DM Serif Display', 'Times New Roman', serif",
@@ -251,7 +251,6 @@ const MediaViewer = ({
             >
               Contents
             </span>
-            <span aria-hidden="true" className="absolute left-4 -bottom-px h-[2px] w-7 bg-black" />
           </div>
           <ul className="py-0">
             {media.map((item, index) => (
