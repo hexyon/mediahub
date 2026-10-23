@@ -200,11 +200,16 @@ const MediaViewer = ({
             {currentMedia?.type === 'image' && (
               <button
                 onClick={handleToggleDescription}
-                className="film-counter cursor-pointer mr-2 text-center"
+                className="film-counter cursor-pointer mr-2 flex items-center justify-center"
                 style={{ outline: 'none', minWidth: '40px' }}
                 title="AI Description"
+                aria-label="AI Description"
               >
-                i
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style={{ display: 'block' }} aria-hidden="true">
+                  <circle cx="8" cy="8" r="6.75" stroke="currentColor" strokeWidth="1.4" />
+                  <circle cx="8" cy="4.6" r="1" fill="currentColor" />
+                  <line x1="8" y1="7.4" x2="8" y2="11.6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                </svg>
               </button>
             )}
             <button
