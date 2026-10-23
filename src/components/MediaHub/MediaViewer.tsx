@@ -260,7 +260,7 @@ const MediaViewer = ({
             .absolute.top-\\[72px\\].right-5::-webkit-scrollbar-thumb { background-color: #D1D1D6; border-radius: 2px; }
             .absolute.top-\\[72px\\].right-5::-webkit-scrollbar-thumb:hover { background-color: #B5B5BD; }
           `}</style>
-          <div className="sticky top-0 z-10 px-4 pt-3.5 pb-3 bg-white">
+          <div className="sticky top-0 z-10 px-4" style={{ background: '#000', padding: '11px 16px 15px' }}>
             <span
               style={{
                 fontFamily: "'DM Serif Display', 'Times New Roman', serif",
@@ -269,7 +269,7 @@ const MediaViewer = ({
                 fontStyle: 'normal',
                 letterSpacing: '0.01em',
                 lineHeight: 1,
-                color: '#111',
+                color: '#fff',
               }}
             >
               Contents
