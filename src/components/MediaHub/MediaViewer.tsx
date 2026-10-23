@@ -200,22 +200,8 @@ const MediaViewer = ({
             {currentMedia?.type === 'image' && (
               <button
                 onClick={handleToggleDescription}
-                className={cn(
-                  "w-8 h-8 mr-2 flex items-center justify-center cursor-pointer",
-                  "border-[1.5px] border-black"
-                )}
-                style={{
-                  borderRadius: 0,
-                  background: showDescription ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.9)',
-                  backdropFilter: 'blur(10px)',
-                  WebkitBackdropFilter: 'blur(10px)',
-                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-                  fontFamily: "'Times New Roman', serif",
-                  fontSize: '16px',
-                  fontStyle: 'italic',
-                  fontWeight: 'normal',
-                  color: '#000'
-                }}
+                className="film-counter cursor-pointer mr-2 text-center"
+                style={{ outline: 'none', minWidth: '40px' }}
                 title="AI Description"
               >
                 i
