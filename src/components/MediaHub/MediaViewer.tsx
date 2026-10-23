@@ -246,19 +246,15 @@ const MediaViewer = ({
         <div
           className="absolute top-[72px] right-5 bg-white rounded-none shadow-elevated max-h-[60vh] overflow-y-auto animate-scale-in min-w-[220px] z-20"
           style={{
-            scrollbarWidth: 'thin',
-            scrollbarColor: '#D1D1D6 transparent',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
             minWidth: '240px',
-            border: '1px solid rgba(0, 0, 0, 0.08)',
             borderRadius: '4px',
             boxShadow: '0 20px 48px rgba(0, 0, 0, 0.14), 0 2px 8px rgba(0, 0, 0, 0.06)',
           }}
         >
           <style>{`
-            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar { width: 4px; }
-            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar-track { background: transparent; }
-            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar-thumb { background-color: #D1D1D6; border-radius: 2px; }
-            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar-thumb:hover { background-color: #B5B5BD; }
+            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar { display: none; }
           `}</style>
           <div className="sticky top-0 z-10 px-4" style={{ background: '#000', padding: '11px 16px 15px' }}>
             <span
