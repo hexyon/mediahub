@@ -222,7 +222,14 @@ const MediaViewer = ({
       {!isContentPlus && showList && (
         <div
           className="absolute top-[72px] right-5 bg-white rounded-none shadow-elevated max-h-[60vh] overflow-y-auto animate-scale-in min-w-[220px] z-20"
-          style={{ scrollbarWidth: 'thin', scrollbarColor: '#D1D1D6 transparent' }}
+          style={{
+            scrollbarWidth: 'thin',
+            scrollbarColor: '#D1D1D6 transparent',
+            minWidth: '240px',
+            border: '1px solid rgba(0, 0, 0, 0.08)',
+            borderRadius: '4px',
+            boxShadow: '0 20px 48px rgba(0, 0, 0, 0.14), 0 2px 8px rgba(0, 0, 0, 0.06)',
+          }}
         >
           <style>{`
             .absolute.top-\\[72px\\].right-5::-webkit-scrollbar { width: 4px; }
@@ -230,8 +237,21 @@ const MediaViewer = ({
             .absolute.top-\\[72px\\].right-5::-webkit-scrollbar-thumb { background-color: #D1D1D6; border-radius: 2px; }
             .absolute.top-\\[72px\\].right-5::-webkit-scrollbar-thumb:hover { background-color: #B5B5BD; }
           `}</style>
-          <div className="px-3 py-2 border-b border-[#E0E0E0] bg-[#F5F5F7]">
-            <span className="font-semibold text-sm text-[#111] italic">List</span>
+          <div className="sticky top-0 z-10 px-4 pt-3.5 pb-3 bg-white" style={{ borderBottom: '1px solid #E8E8EC' }}>
+            <span
+              style={{
+                fontFamily: "'DM Serif Display', 'Times New Roman', serif",
+                fontSize: '19px',
+                fontWeight: 400,
+                fontStyle: 'normal',
+                letterSpacing: '0.01em',
+                lineHeight: 1,
+                color: '#111',
+              }}
+            >
+              Contents
+            </span>
+            <span aria-hidden="true" className="absolute left-4 -bottom-px h-[2px] w-7 bg-black" />
           </div>
           <ul className="py-0">
             {media.map((item, index) => (
@@ -239,7 +259,7 @@ const MediaViewer = ({
                 key={item.id}
                 onClick={() => { onIndexChange(index); setShowList(false); }}
                 className={cn(
-                  "flex items-center gap-2 px-3 py-2 cursor-pointer",
+                  "flex items-center gap-2.5 px-4 py-2.5 cursor-pointer",
                   "hover:bg-[#F5F5F7] transition-colors",
                   "border-b border-[#E0E0E0]",
                   index === currentIndex
@@ -248,15 +268,12 @@ const MediaViewer = ({
                   (index === 0 || index === media.length - 1) && "bg-[#FAFAFA]"
                 )}
               >
-                <span className="font-semibold text-sm text-[#111]">{item.type === 'video' ? 'Video' : 'Image'}</span>
-                <span className="text-[#111] text-sm">{index + 1}.</span>
+                <span className="font-semibold text-sm text-[#111] pr-2 border-r border-[#C8C8C8]">{item.type === 'video' ? 'Video' : 'Image'}</span>
+                <span className="text-[#6E6E73] text-sm tabular-nums">{index + 1}.</span>
                 <span className="text-sm truncate flex-1 text-[#111]">{item.name}</span>
               </li>
             ))}
           </ul>
-          <div className="px-3 py-2 border-t border-[#E0E0E0] bg-[#F5F5F7]">
-            <span className="text-xs text-gray-500 font-medium italic">Total: {media.length}</span>
-          </div>
         </div>
       )}
 
