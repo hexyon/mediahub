@@ -205,10 +205,8 @@ const MediaViewer = ({
                 title="AI Description"
                 aria-label="AI Description"
               >
-                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style={{ display: 'block' }} aria-hidden="true">
-                  <circle cx="8" cy="8" r="6.75" stroke="currentColor" strokeWidth="1.4" />
-                  <circle cx="8" cy="4.6" r="1" fill="currentColor" />
-                  <line x1="8" y1="7.4" x2="8" y2="11.6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                <svg width="7" height="15" viewBox="149 79 128 276" fill="currentColor" style={{ display: 'block' }} aria-hidden="true">
+                  <path d="M207.8 348.4C228.1 341.7 248.3 329.1 270.8 309.3L275.1 305.5L271.3 300.3C266.8 294 267.5 294.1 260.9 298.6C253.4 303.7 241.9 309.1 237.1 309.7C229.1 310.8 229.5 306.6 241 264C258.2 199.8 259.3 191.1 250.9 182.7C244.5 176.4 225.8 180.5 198.6 194.2C182.7 202.2 151 223.1 151 225.6C151 226.7 157.5 237 158 236.7C158.3 236.6 162.3 234.5 167 232.1C177.3 226.8 187.1 223 190.6 223C195.4 223 196 219.7 180.3 283.9C169 330.6 168.5 339.6 177.3 347.8C182.5 352.7 194.3 353 207.8 348.4ZM248.3 143C265.6 136.5 273.9 120.1 269 102C263.7 82.2 227.3 81.1 211.7 100.2C202.9 110.9 202.2 129.2 210.3 137.8C217.6 145.7 234.9 148 248.3 143Z" />
                 </svg>
               </button>
             )}
