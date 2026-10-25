@@ -244,7 +244,7 @@ const MediaViewer = ({
       {/* Media list dropdown */}
       {!isContentPlus && showList && (
         <div
-          className="absolute top-[72px] right-5 bg-white rounded-none shadow-elevated max-h-[60vh] overflow-y-auto animate-scale-in min-w-[220px] z-20"
+          className="absolute top-[72px] right-5 bg-black rounded-none shadow-elevated max-h-[60vh] overflow-y-auto animate-scale-in min-w-[220px] z-20"
           style={{
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
@@ -271,7 +271,7 @@ const MediaViewer = ({
               Contents
             </span>
           </div>
-          <ul className="py-0">
+          <ul className="bg-white py-0">
             {media.map((item, index) => (
               <li
                 key={item.id}
