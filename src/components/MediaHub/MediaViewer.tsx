@@ -244,19 +244,14 @@ const MediaViewer = ({
       {/* Media list dropdown */}
       {!isContentPlus && showList && (
         <div
-          className="absolute top-[72px] right-5 bg-black rounded-none shadow-elevated max-h-[60vh] overflow-y-auto animate-scale-in min-w-[220px] z-20"
+          className="absolute top-[72px] right-5 flex flex-col bg-black rounded-none shadow-elevated max-h-[60vh] overflow-hidden animate-scale-in min-w-[220px] z-20"
           style={{
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
             minWidth: '240px',
             borderRadius: '4px',
             boxShadow: '0 20px 48px rgba(0, 0, 0, 0.14), 0 2px 8px rgba(0, 0, 0, 0.06)',
           }}
         >
-          <style>{`
-            .absolute.top-\\[72px\\].right-5::-webkit-scrollbar { display: none; }
-          `}</style>
-          <div className="sticky top-0 z-10 px-4" style={{ background: '#000', padding: '11px 16px 15px' }}>
+          <div className="shrink-0 px-4" style={{ background: '#000', padding: '11px 16px 15px' }}>
             <span
               style={{
                 fontFamily: "'DM Serif Display', 'Times New Roman', serif",
@@ -271,7 +266,7 @@ const MediaViewer = ({
               Contents
             </span>
           </div>
-          <ul className="bg-white py-0">
+          <ul className="min-h-0 overflow-y-auto scrollbar-hide bg-white py-0">
             {media.map((item, index) => (
               <li
                 key={item.id}
